@@ -1,5 +1,4 @@
 import React, {FormEvent, useEffect, useState} from "react";
-import CIcon from "@coreui/icons-react";
 import {
     CCardHeader,
     CCard,
@@ -90,7 +89,9 @@ const Profile: React.FunctionComponent = () => {
                                      color="primary"
                                      onClick={onSubmit}
                             >
-                                <CIcon size="sm" name="cil-save"/> Update</CButton>
+                                {/*<CIcon size="sm" name="cil-save"/> */}
+                                Update
+                            </CButton>
                         </CCardFooter>
                     </CCard>
                 </CCol>

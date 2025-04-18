@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import {CNavItem, CNavTitle, CSidebar, CSidebarBrand, CSidebarNav,} from '@coreui/react';
 import {GlobalContext} from '../state/GlobalStore';
-import CIcon from '@coreui/icons-react';
 
 const TheSidebar = (): React.JSX.Element => {
     const [state, dispatch] = useContext(GlobalContext);
@@ -11,7 +10,7 @@ const TheSidebar = (): React.JSX.Element => {
             type: 'item',
             name: 'Dashboard',
             to: '/',
-            icon: <CIcon name="cil-speedometer" customClassName="nav-icon" />,
+            // icon: <CIcon name="cil-speedometer" customClassName="nav-icon" />,
         },
         {
             type: 'title',
@@ -21,7 +20,7 @@ const TheSidebar = (): React.JSX.Element => {
             type: 'item',
             name: 'Profile',
             to: '/profile',
-            icon: <CIcon name="cil-user" customClassName="nav-icon" />,
+            // icon: <CIcon name="cil-user" customClassName="nav-icon" />,
         },
     ];
 
@@ -30,7 +29,7 @@ const TheSidebar = (): React.JSX.Element => {
             if (item.type === 'item') {
                 return (
                     <CNavItem key={index} href={item.to}>
-                        {item.icon}
+                        {/*{item.icon}*/}
                         {item.name}
                     </CNavItem>
                 );
@@ -44,6 +43,7 @@ const TheSidebar = (): React.JSX.Element => {
     return (
         <CSidebar
             visible={state.sidebarShow}
+
             onVisibleChange={(visible) => {
                 dispatch({
                     type: visible ? 'SIDEBAR_SHOW' : 'SIDEBAR_HIDE',
@@ -52,16 +52,16 @@ const TheSidebar = (): React.JSX.Element => {
             }}
         >
             <CSidebarBrand className="d-md-down-none">
-                <CIcon
-                    className="c-sidebar-brand-full"
-                    name="logo-negative"
-                    height={35}
-                />
-                <CIcon
-                    className="c-sidebar-brand-minimized"
-                    name="sygnet"
-                    height={35}
-                />
+                {/*<CIcon*/}
+                {/*    className="c-sidebar-brand-full"*/}
+                {/*    name="logo-negative"*/}
+                {/*    height={35}*/}
+                {/*/>*/}
+                {/*<CIcon*/}
+                {/*    className="c-sidebar-brand-minimized"*/}
+                {/*    name="sygnet"*/}
+                {/*    height={35}*/}
+                {/*/>*/}
             </CSidebarBrand>
             <CSidebarNav>{renderNavItems(navigation)}</CSidebarNav>
         </CSidebar>

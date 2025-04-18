@@ -10,7 +10,7 @@ const DefaultLayout: React.FunctionComponent<any> = () => {
             <TheSidebar/>
             <div className="c-wrapper">
 
-                <TheHeader/>
+                {/*<TheHeader/>*/}
 
                 <div className="c-body">
                     <TheContent/>

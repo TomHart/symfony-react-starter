@@ -25,18 +25,18 @@ RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
     && npm install -g yarn
 
 RUN curl --silent --show-error https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && usermod -u 1000 www-data \
     && mkdir /var/www/.composer \
     && chown www-data:www-data /var/www/.composer \
-    && mkdir /var/www/.yarn \
     && mkdir /var/www/.cache \
-    && touch /var/www/.yarnrc \
+    && chown www-data:www-data /var/www/.cache \
+    && mkdir /var/www/.yarn \
     && chown www-data:www-data /var/www/.yarn \
+    && touch /var/www/.yarnrc \
     && chown www-data:www-data /var/www/.yarnrc \
-    && chown www-data:www-data /var/www/.cache
+    && git config --global --add safe.directory /var/www/html
 
-#RUN usermod -u 1000 www-data
-#
-#USER 1000
+USER www-data
 
 WORKDIR /var/www/html
 

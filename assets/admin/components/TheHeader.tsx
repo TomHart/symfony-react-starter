@@ -6,7 +6,6 @@ import {
     CHeaderBrand,
     CHeaderNav,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../state/GlobalStore";
 import routes from "../routes";
@@ -42,17 +41,17 @@ const TheHeader = (): React.JSX.Element => {
                 className="ml-md-3 d-lg-none"
                 onClick={toggleSidebar}
             >
-                <CIcon name="cil-menu" />
+                {/*<CIcon name="cil-menu" />*/}
             </button>
             <button
                 className="ml-3 d-md-down-none"
                 onClick={toggleSidebar}
             >
-                <CIcon name="cil-menu" />
+                {/*<CIcon name="cil-menu" />*/}
             </button>
             <CHeaderBrand className="mx-auto d-lg-none">
                 <Link to="/">
-                    <CIcon name="logo" height={48} />
+                    {/*<CIcon name="logo" height={48} />*/}
                 </Link>
             </CHeaderBrand>
 

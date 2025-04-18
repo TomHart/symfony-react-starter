@@ -1,4 +1,3 @@
-import CIcon from "@coreui/icons-react";
 import {
     CBadge,
     CButton,
@@ -139,7 +138,7 @@ const Dashboard: React.FunctionComponent = () => {
                                     <CRow>
                                         <CCol sm="6">
                                             <CCallout color="warning">
-                                                <small className="text-muted">Pageviews</small>
+                                                <small className="text-muted">Page views</small>
                                                 <br/>
                                                 <strong className="h4">78,623</strong>
                                             </CCallout>
@@ -157,7 +156,7 @@ const Dashboard: React.FunctionComponent = () => {
 
                                     <div className="progress-group mb-4">
                                         <div className="progress-group-header">
-                                            <CIcon className="progress-group-icon" name="cil-user"/>
+                                            {/*<CIcon className="progress-group-icon" name="cil-user"/>*/}
                                             <span className="title">Male</span>
                                             <span className="ml-auto font-weight-bold">43%</span>
                                         </div>
@@ -167,7 +166,7 @@ const Dashboard: React.FunctionComponent = () => {
                                     </div>
                                     <div className="progress-group mb-5">
                                         <div className="progress-group-header">
-                                            <CIcon className="progress-group-icon" name="cil-user-female"/>
+                                            {/*<CIcon className="progress-group-icon" name="cil-user-female"/>*/}
                                             <span className="title">Female</span>
                                             <span className="ml-auto font-weight-bold">37%</span>
                                         </div>
@@ -177,7 +176,7 @@ const Dashboard: React.FunctionComponent = () => {
                                     </div>
                                     <div className="progress-group">
                                         <div className="progress-group-header">
-                                            <CIcon className="progress-group-icon" name="cil-globe-alt"/>
+                                            {/*<CIcon className="progress-group-icon" name="cil-globe-alt"/>*/}
                                             <span className="title">Organic Search</span>
                                             <span className="ml-auto font-weight-bold">191,235 <span
                                                 className="text-muted small">(56%)</span></span>
@@ -190,7 +189,7 @@ const Dashboard: React.FunctionComponent = () => {
 
                                     <div className="progress-group">
                                         <div className="progress-group-header">
-                                            <CIcon name="cib-facebook" className="progress-group-icon"/>
+                                            {/*<CIcon name="cib-facebook" className="progress-group-icon"/>*/}
                                             <span className="title">Facebook</span>
                                             <span className="ml-auto font-weight-bold">51,223 <span
                                                 className="text-muted small">(15%)</span></span>
@@ -201,7 +200,7 @@ const Dashboard: React.FunctionComponent = () => {
                                     </div>
                                     <div className="progress-group">
                                         <div className="progress-group-header">
-                                            <CIcon name="cib-twitter" className="progress-group-icon"/>
+                                            {/*<CIcon name="cib-twitter" className="progress-group-icon"/>*/}
                                             <span className="title">Twitter</span>
                                             <span className="ml-auto font-weight-bold">37,564 <span
                                                 className="text-muted small">(11%)</span></span>
@@ -212,7 +211,7 @@ const Dashboard: React.FunctionComponent = () => {
                                     </div>
                                     <div className="progress-group">
                                         <div className="progress-group-header">
-                                            <CIcon name="cib-linkedin" className="progress-group-icon"/>
+                                            {/*<CIcon name="cib-linkedin" className="progress-group-icon"/>*/}
                                             <span className="title">LinkedIn</span>
                                             <span className="ml-auto font-weight-bold">27,319 <span
                                                 className="text-muted small">(8%)</span></span>
@@ -223,7 +222,7 @@ const Dashboard: React.FunctionComponent = () => {
                                     </div>
                                     <div className="divider text-center">
                                         <CButton color="link" size="sm" className="text-muted">
-                                            <CIcon name="cil-options"/>
+                                            {/*<CIcon name="cil-options"/>*/}
                                         </CButton>
                                     </div>
 
@@ -251,7 +250,7 @@ const Dashboard: React.FunctionComponent = () => {
                                         </div>
                                     </td>
                                     <td className="text-center">
-                                        <CIcon height={25} name="cif-us" title="us" id="us"/>
+                                        {/*<CIcon height={25} name="cif-us" title="us" id="us"/>*/}
                                     </td>
                                     <td>
                                         <div className="clearfix">
@@ -265,7 +264,7 @@ const Dashboard: React.FunctionComponent = () => {
                                         <CProgress className="progress-xs" color="success" value={50}/>
                                     </td>
                                     <td className="text-center">
-                                        <CIcon height={25} name="cib-cc-mastercard"/>
+                                        {/*<CIcon height={25} name="cib-cc-mastercard"/>*/}
                                     </td>
                                     <td>
                                         <div className="small text-muted">Last login</div>
@@ -281,7 +280,7 @@ const Dashboard: React.FunctionComponent = () => {
                                         </div>
                                     </td>
                                     <td className="text-center">
-                                        <CIcon height={25} name="cif-br" title="br" id="br"/>
+                                        {/*<CIcon height={25} name="cif-br" title="br" id="br"/>*/}
                                     </td>
                                     <td>
                                         <div className="clearfix">
@@ -295,7 +294,7 @@ const Dashboard: React.FunctionComponent = () => {
                                         <CProgress className="progress-xs" color="info" value={10}/>
                                     </td>
                                     <td className="text-center">
-                                        <CIcon height={25} name="cib-cc-visa"/>
+                                        {/*<CIcon height={25} name="cib-cc-visa"/>*/}
                                     </td>
                                     <td>
                                         <div className="small text-muted">Last login</div>
