@@ -13,7 +13,7 @@ export default function Login() {
         setShowPassword(!showPassword)
     }
 
-    return <div className="w-full max-w-md space-y-8">
+    return <div className="m-auto w-full max-w-md space-y-8">
         <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold">Welcome back</h1>
             <p className="text-muted-foreground">Enter your credentials to access your account</p>

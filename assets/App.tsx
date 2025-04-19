@@ -1,28 +1,33 @@
-import React from "react";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-// import GlobalStore from "./state/GlobalStore";
-// import Loading from "./components/Loading";
-// import Page404 from "./views/Page404";
-// import Page500 from "./views/Page500";
-import Layout from "./app/layout";
-import Home from "./app/page";
-import Login from "@/app/login";
+import React, {lazy} from "react";
+import {HashRouter as Router, Route, Routes} from "react-router-dom";
+import Layout from "@/app/layout";
+import Home from "@/app/page";
+import Loading from "@/app/Loading";
+
+const Login = lazy(async () => {
+    const [moduleExports] = await Promise.all([
+        import("@/app/login"),
+        new Promise(resolve => setTimeout(resolve, 3000))
+    ]);
+    return moduleExports;
+});
 
 export default function App(): React.JSX.Element {
     return (
         <Router basename="/">
-            {/*<GlobalStore>*/}
             <Layout>
-                <React.Suspense /*fallback={<Loading />}*/>
                     <Routes>
-                        {/*<Route path="/404" element={<Page404 />} />*/}
-                        {/*<Route path="/500" element={<Page500 />} />*/}
                         <Route path="/" element={<Home/>}/>
-                        <Route path="/login" element={<Login/>}/>
+                        <Route
+                            path="/login"
+                            element={
+                                <React.Suspense fallback={<Loading />}>
+                                    <Login />
+                                </React.Suspense>
+                            }
+                        />
                     </Routes>
-                </React.Suspense>
             </Layout>
-            {/*</GlobalStore>*/}
         </Router>
     );
 }
