@@ -13,7 +13,11 @@
       "dom",
       "es2015",
       "es2016"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["assets/*"]
+    }
   },
   "compileOnSave": true,
   "include": [

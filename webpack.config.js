@@ -1,16 +1,16 @@
 const Encore = require('@symfony/webpack-encore');
-const webpack = require('webpack');
+const path = require("path");
 
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
 
 Encore
-    .setOutputPath('public/build/landing')
-    .setPublicPath('/build/landing')
-    .addEntry('landing', './assets/landing/index.js')
+    .setOutputPath('public/build/index')
+    .setPublicPath('/build/index')
+    .addEntry('index', './assets/index.tsx')
 
-    .splitEntryChunks()
+    // .splitEntryChunks()
     .enableSingleRuntimeChunk()
 
     .cleanupOutputBeforeBuild()
@@ -18,50 +18,59 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
 
-    // enables @babel/preset-env polyfills
-    .configureBabelPresetEnv((config) => {
-        config.useBuiltIns = 'usage';
-        config.corejs = 3;
-    })
-
-    .enableSassLoader()
-;
-
-const landingConfig = Encore.getWebpackConfig();
-landingConfig.name = 'landing';
-
-Encore.reset();
-
-Encore
-    .setOutputPath('public/build/admin')
-    .setPublicPath('/build/admin')
-    .addEntry('admin', './assets/admin/index.tsx')
-
-    .splitEntryChunks()
-    .enableSingleRuntimeChunk()
-
-    .cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
-    .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
+    .enablePostCssLoader()
 
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
         config.corejs = 3;
     })
 
-    .enableTypeScriptLoader(function (tsConfig) {
-    })
+    .enableTypeScriptLoader()
     .enableReactPreset()
     .enableSassLoader()
 
-    .configureCssLoader(options => {
-        options.modules = {
-            localIdentName: '[local]'
-        }
+    .addAliases({
+        '@': path.resolve(__dirname, 'assets'),
     })
-;
-const adminConfig = Encore.getWebpackConfig();
-adminConfig.name = 'admin';
 
-module.exports = [landingConfig, adminConfig];
+const indexConfig = Encore.getWebpackConfig();
+indexConfig.name = 'index';
+
+// Encore.reset();
+//
+// Encore
+//     .setOutputPath('public/build/admin')
+//     .setPublicPath('/build/admin')
+//     .addEntry('admin', './assets/admin/index.tsx')
+//
+//     .splitEntryChunks()
+//     .enableSingleRuntimeChunk()
+//
+//     .cleanupOutputBeforeBuild()
+//     .enableBuildNotifications()
+//     .enableSourceMaps(!Encore.isProduction())
+//     .enableVersioning(Encore.isProduction())
+//
+//     .configureBabelPresetEnv((config) => {
+//         config.useBuiltIns = 'usage';
+//         config.corejs = 3;
+//     })
+//
+//     .enableTypeScriptLoader(function (tsConfig) {
+//     })
+//     .enableReactPreset()
+//     .enableSassLoader()
+//
+//     .configureCssLoader(options => {
+//         options.modules = {
+//             localIdentName: '[local]'
+//         }
+//     })
+// ;
+// const adminConfig = Encore.getWebpackConfig();
+// adminConfig.name = 'admin';
+
+module.exports = [
+    indexConfig,
+    // adminConfig
+];
