@@ -10,7 +10,7 @@ export default function Home() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <a href="/" className="font-semibold text-xl">
-              ProductSphere
+              Product Sphere
             </a>
           </div>
           <nav className="hidden md:flex gap-6">
