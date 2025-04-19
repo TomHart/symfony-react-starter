@@ -1,0 +1,13 @@
+./docker
+./node_modules
+./public/build
+./var
+./vendor
+./.env.*
+./.gitignore
+./build.sh
+./docker-compose.yml
+./LICENSE
+./Makefile
+./README.md
+./v0-tidy.sh

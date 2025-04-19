@@ -8,7 +8,9 @@ services:
             - ./:/var/www/html
 
     app:
-        build: ./docker/php
+        build:
+            context: ./docker/php
+            target: base
 #        environment:
 #            XDEBUG_MODE: debug
 #            XDEBUG_CONFIG: "client_host=172.17.0.1 client_port=9003"

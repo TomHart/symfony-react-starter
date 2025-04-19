@@ -21,3 +21,6 @@ composer:
 
 cache:
 	docker-compose exec -u www-data front php bin/console cache:clear
+
+build:
+	docker build -t app -f ./docker/php/Dockerfile .

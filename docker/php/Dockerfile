@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.3-fpm as base
 
 RUN rm -rf /var/lib/apt/lists/* \
     && apt-get update \
@@ -41,3 +41,14 @@ USER www-data
 WORKDIR /var/www/html
 
 CMD ["php-fpm"]
+
+FROM base as build
+
+COPY --chown=www-data:www-data . /var/www/html
+
+RUN composer install; \
+    yarn install;
+
+RUN ls -lash public; \
+    whoami; \
+    yarn run build
