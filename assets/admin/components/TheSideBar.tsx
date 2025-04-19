@@ -28,7 +28,7 @@ const TheSidebar = (): React.JSX.Element => {
         items.map((item, index) => {
             if (item.type === 'item') {
                 return (
-                    <CNavItem key={index} href={item.to}>
+                    <CNavItem key={index} to={item.to}>
                         {/*{item.icon}*/}
                         {item.name}
                     </CNavItem>
