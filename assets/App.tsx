@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import Page500 from "./views/Page500";
 import Layout from "./app/layout";
 import Home from "./app/page";
+import Login from "@/app/login";
 
 export default function App(): React.JSX.Element {
     return (
@@ -15,7 +16,8 @@ export default function App(): React.JSX.Element {
                     <Routes>
                         {/*<Route path="/404" element={<Page404 />} />*/}
                         {/*<Route path="/500" element={<Page500 />} />*/}
-                        <Route path="/*" element={<Layout><Home /></Layout>} />
+                        <Route path="/" element={<Layout><Home /></Layout>} />
+                        <Route path="/login" element={<Layout><Login /></Layout>} />
                     </Routes>
                 </React.Suspense>
             {/*</GlobalStore>*/}

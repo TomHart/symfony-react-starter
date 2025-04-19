@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container m-auto @container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <a href="/" className="font-semibold text-xl">
               Product Sphere
@@ -49,9 +49,9 @@ export default function Home() {
           </div>
         </div>
       </header>
-      <main className="flex-1">
+      <main className="container @container m-auto flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
+          <div className="px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">

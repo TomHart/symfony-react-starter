@@ -33,6 +33,10 @@ Encore
         '@': path.resolve(__dirname, 'assets'),
     })
 
+    .configureWatchOptions((watchOptions) => {
+        watchOptions.ignored = /node_modules|public\/build/; // Ignore these directories
+    })
+
 const indexConfig = Encore.getWebpackConfig();
 indexConfig.name = 'index';
 
