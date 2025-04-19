@@ -2,7 +2,7 @@ import React from "react"
 import {Button} from "@/components/ui/button";
 import {Link} from "react-router-dom";
 
-export default function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
+export default function DefaultLayout({children}: Readonly<{ children: React.ReactNode }>) {
     return <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container m-auto @container flex h-16 items-center justify-between">
@@ -47,7 +47,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
                 </div>
             </div>
         </header>
-        <main className="container @container m-auto flex-1">
+        <main className="container @container m-auto flex flex-col flex-1 items-center justify-center py-6 md:py-12 lg:py-16 xl:py-24">
             {children}
         </main>
         <footer className="w-full border-t py-6 md:py-0">
