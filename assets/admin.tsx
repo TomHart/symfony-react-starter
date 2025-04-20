@@ -1,8 +1,8 @@
 import React from 'react';
-import LandingApp from "./LandingApp";
 import './globals.css'
 import {createRoot} from 'react-dom/client';
+import AdminApp from './AdminApp';
 
 const container = document.getElementById('app');
 const root = createRoot(container!);
-root.render(<LandingApp />);
+root.render(<AdminApp />);
