@@ -44,11 +44,33 @@ CMD ["php-fpm"]
 
 FROM base as build
 
-COPY --chown=www-data:www-data . /var/www/html
+COPY --chown=www-data:www-data assets/ /var/www/html/assets/
+COPY --chown=www-data:www-data bin/ /var/www/html/bin/
+COPY --chown=www-data:www-data config/ /var/www/html/config/
+COPY --chown=www-data:www-data migrations/ /var/www/html/migrations/
+COPY --chown=www-data:www-data public/ /var/www/html/public/
+COPY --chown=www-data:www-data src/ /var/www/html/src/
+COPY --chown=www-data:www-data templates/ /var/www/html/templates/
+COPY --chown=www-data:www-data components.json composer.json composer.lock package.json postcss.config.js symfony.lock tailwind.config.js tsconfig.json webpack.config.js /var/www/html/
 
 RUN composer install; \
     yarn install;
 
-RUN ls -lash public; \
-    whoami; \
-    yarn run build
+RUN ls -lash; \
+    yarn run build;
+
+FROM build as final
+
+USER root
+RUN apt install -y nginx supervisor mysql-client;
+
+COPY --chown=www-data:www-data ./docker/php/default.conf /etc/nginx/sites-available/default
+COPY --chown=www-data:www-data ./docker/php/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN mkdir -p /var/lib/nginx /var/log/nginx /var/run/nginx; \
+    touch /run/nginx.pid; \
+    chown -R www-data:www-data /var/lib/nginx /var/log/nginx /var/run/nginx /run/nginx.pid;
+
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+USER www-data
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

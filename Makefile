@@ -24,3 +24,11 @@ cache:
 
 build:
 	docker build -t app -f ./docker/php/Dockerfile .
+
+run-prod:
+	docker run \
+		-it \
+		--env-file .env \
+		-p 80:80 \
+		--link symfony-scaffolding-mariadb-1:mariadb \
+		--network symfony-scaffolding_default app bash
