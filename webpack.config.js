@@ -6,9 +6,10 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 Encore
-    .setOutputPath('public/build/unauthenticated')
-    .setPublicPath('/build/unauthenticated')
-    .addEntry('unauthenticated', './assets/unauthenticated.tsx')
+    .setOutputPath('public/build')
+    .setPublicPath('/build')
+    .addEntry('landing', './assets/landing.tsx')
+    .addEntry('admin', './assets/admin.tsx')
 
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
@@ -37,46 +38,8 @@ Encore
         watchOptions.ignored = /node_modules|public\/build/; // Ignore these directories
     })
 
-const unauthenticatedConfig = Encore.getWebpackConfig();
-
-// Encore.reset();
-//
-// Encore
-//
-//     .setOutputPath('public/build/unauthenticated')
-//     .setPublicPath('/build/unauthenticated')
-//     .addEntry('admin', './assets/unauthenticated.tsx')
-//
-//     // .splitEntryChunks()
-//     .enableSingleRuntimeChunk()
-//
-//     .cleanupOutputBeforeBuild()
-//     .enableBuildNotifications()
-//     .enableSourceMaps(!Encore.isProduction())
-//     .enableVersioning(Encore.isProduction())
-//
-//     .enablePostCssLoader()
-//
-//     .configureBabelPresetEnv((config) => {
-//         config.useBuiltIns = 'usage';
-//         config.corejs = 3;
-//     })
-//
-//     .enableTypeScriptLoader()
-//     .enableReactPreset()
-//     .enableSassLoader()
-//
-//     .addAliases({
-//         '@': path.resolve(__dirname, 'assets'),
-//     })
-//
-//     .configureWatchOptions((watchOptions) => {
-//         watchOptions.ignored = /node_modules|public\/build/; // Ignore these directories
-//     })
-// ;
-// const adminConfig = Encore.getWebpackConfig();
+const landingConfig = Encore.getWebpackConfig();
 
 module.exports = [
-    unauthenticatedConfig,
-    // adminConfig
+    landingConfig,
 ];

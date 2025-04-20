@@ -1,21 +1,21 @@
 import React from "react";
 import {HashRouter as Router, Route, Routes} from "react-router-dom";
-import UnauthenticatedLayout from "@/layouts/UnauthenticatedLayout";
-import Home from "@/pages/Unauthenticated/Home";
-import Register from "@/pages/Unauthenticated/Register";
-import Login from "@/pages/Unauthenticated/Login";
+import LandingLayout from "@/layouts/LandingLayout";
+import Home from "@/pages/Landing/Home";
+import Register from "@/pages/Landing/Register";
+import Login from "@/pages/Landing/Login";
 
-export default function UnauthenticatedApp(): React.JSX.Element {
+export default function LandingApp(): React.JSX.Element {
 
     return (
         <Router basename="/">
-            <UnauthenticatedLayout>
+            <LandingLayout>
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
                 </Routes>
-            </UnauthenticatedLayout>
+            </LandingLayout>
         </Router>
     );
 }

@@ -2,7 +2,7 @@ import React from "react"
 import {Button} from "@/components/ui/button";
 import {Link} from "react-router-dom";
 
-export default function UnauthenticatedLayout({children}: Readonly<{ children: React.ReactNode }>) {
+export default function LandingLayout({children}: Readonly<{ children: React.ReactNode }>) {
     return <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container m-auto @container flex h-16 items-center justify-between">
