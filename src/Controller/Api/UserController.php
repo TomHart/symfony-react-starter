@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
@@ -25,11 +26,11 @@ class UserController extends AbstractController
     }
 
     #[Route('/users', name: 'user_list')]
-    public function index(EntityManagerInterface $em): Response
+    public function index(EntityManagerInterface $em, SerializerInterface $serializer): Response
     {
         $users = $em->getRepository(User::class)->findAll();
 
-        return new JsonResponse($users);
+        return new JsonResponse(json_decode($serializer->serialize($users, 'json')));
     }
 
     #[Route('/user/{id}', name: 'api_user_update', methods: ['POST'])]

@@ -19,7 +19,6 @@ security:
             provider: app_user_provider
 
             remember_me:
-                secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
                 path: /
                 always_remember_me: true

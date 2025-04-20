@@ -54,7 +54,8 @@ export default function Register() {
             if (response.ok) {
                 // Handle success (e.g., show message, redirect)
                 console.log('User registered successfully');
-                // Reset form or redirect if needed
+
+                window.location.href = '/admin';
             } else {
                 // Handle errors
                 const responseData = await response.json();

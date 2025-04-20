@@ -74,8 +74,7 @@ class RegistrationController extends AbstractController
                 new UsernamePasswordToken($user, 'main', $user->getRoles()),
             );
 
-            // Redirect the user to the app_admin area or dashboard after successful registration
-            return $this->redirectToRoute('app_admin');
+            return new JsonResponse(['success' => true]);
         }
 
         if ($form->isSubmitted()) {

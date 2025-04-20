@@ -18,7 +18,7 @@ services:
             - ./:/var/www/html
 
     mariadb:
-        image: mariadb:10.4
+        image: mariadb:lts
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-pass}
             MYSQL_DATABASE: ${MYSQL_DATABASE:-db}
