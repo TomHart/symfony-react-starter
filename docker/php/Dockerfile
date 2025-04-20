@@ -44,19 +44,20 @@ CMD ["php-fpm"]
 
 FROM base as build
 
-COPY --chown=www-data:www-data assets/ /var/www/html/assets/
+COPY --chown=www-data:www-data components.json composer.json composer.lock package.json postcss.config.js symfony.lock tailwind.config.js tsconfig.json webpack.config.js /var/www/html/
+
+RUN composer install --no-scripts; \
+    yarn install;
+
 COPY --chown=www-data:www-data bin/ /var/www/html/bin/
+COPY --chown=www-data:www-data assets/ /var/www/html/assets/
 COPY --chown=www-data:www-data config/ /var/www/html/config/
 COPY --chown=www-data:www-data migrations/ /var/www/html/migrations/
 COPY --chown=www-data:www-data public/ /var/www/html/public/
 COPY --chown=www-data:www-data src/ /var/www/html/src/
 COPY --chown=www-data:www-data templates/ /var/www/html/templates/
-COPY --chown=www-data:www-data components.json composer.json composer.lock package.json postcss.config.js symfony.lock tailwind.config.js tsconfig.json webpack.config.js /var/www/html/
 
-RUN composer install; \
-    yarn install;
-
-RUN ls -lash; \
+RUN composer run post-install-cmd; \
     yarn run build;
 
 FROM build as final

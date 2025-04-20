@@ -8,13 +8,14 @@ use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -53,12 +54,16 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // Generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
-                    ->from(new Address(
-                        $this->getParameter('notification_email'),
-                        $this->getParameter('notification_email_name')
-                    ))
+                    ->from(
+                        new Address(
+                            $this->getParameter('notification_email'),
+                            $this->getParameter('notification_email_name')
+                        )
+                    )
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('email/registration/confirmation_email.html.twig')
@@ -66,16 +71,30 @@ class RegistrationController extends AbstractController
 
             // Automatically log the user in by generating a valid session after registration
             $tokenStorage->setToken(
-                new UsernamePasswordToken($user, null, $user->getRoles())
+                new UsernamePasswordToken($user, 'main', $user->getRoles()),
             );
 
             // Redirect the user to the app_admin area or dashboard after successful registration
             return $this->redirectToRoute('app_admin');
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+        if ($form->isSubmitted()) {
+            $errors = [];
+            foreach ($form->getErrors(true) as $error) {
+                $formField = $error->getOrigin()->getName();
+                $errors[$formField][] = $error->getMessage();
+            }
+
+            return new JsonResponse([
+                'success' => false,
+                'errors' => $errors
+            ], 400);
+        }
+
+        return new JsonResponse([
+            'success' => false,
+            'message' => 'Form not submitted'
+        ], 400);
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]

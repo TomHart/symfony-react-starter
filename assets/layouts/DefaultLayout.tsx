@@ -39,7 +39,7 @@ export default function DefaultLayout({children}: Readonly<{ children: React.Rea
                         Login
                     </Link>
                     <Button asChild variant="outline">
-                        <a href="/register">Register</a>
+                        <Link to="/register">Register</Link>
                     </Button>
                     <Button asChild>
                         <a href="/dashboard">Dashboard</a>

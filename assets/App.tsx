@@ -3,6 +3,7 @@ import {HashRouter as Router, Route, Routes} from "react-router-dom";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import Home from "@/pages/Home";
 import Loading from "@/pages/Loading";
+import Register from "@/pages/Register";
 
 export default function App(): React.JSX.Element {
 
@@ -27,6 +28,10 @@ export default function App(): React.JSX.Element {
                                 <Login/>
                             </React.Suspense>
                         }
+                    />
+                    <Route
+                        path="/register"
+                        element={<Register/>}
                     />
                 </Routes>
             </DefaultLayout>

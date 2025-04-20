@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Form\UpdateUserFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,6 +22,14 @@ class UserController extends AbstractController
         }
 
         return $this->json($user, Response::HTTP_OK, [], ['groups' => ['api']]);
+    }
+
+    #[Route('/users', name: 'user_list')]
+    public function index(EntityManagerInterface $em): Response
+    {
+        $users = $em->getRepository(User::class)->findAll();
+
+        return new JsonResponse($users);
     }
 
     #[Route('/user/{id}', name: 'api_user_update', methods: ['POST'])]
