@@ -16,6 +16,9 @@ export default function Register() {
         _token: ''
     });
 
+    const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
+    const [errors, setErrors] = useState<{ [key: string]: string[] }>({}); // Store errors per field
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormData((prev) => ({
             ...prev,
@@ -26,9 +29,11 @@ export default function Register() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        setIsSubmitting(true); // Set submission to true (loading state)
+        setErrors({}); // Clear any previous errors
+
         // Start preparing the form data
         const formBody = new URLSearchParams();
-
         formData['_token'] = csrfToken;
 
         // Append form data fields (email, password, etc.)
@@ -49,12 +54,19 @@ export default function Register() {
             if (response.ok) {
                 // Handle success (e.g., show message, redirect)
                 console.log('User registered successfully');
+                // Reset form or redirect if needed
             } else {
                 // Handle errors
-                console.error('Failed to register user');
+                const responseData = await response.json();
+                if (responseData.errors) {
+                    setErrors(responseData.errors); // Store the errors for each field
+                }
             }
         } catch (error) {
             console.error('Error submitting form:', error);
+            setErrors({ general: ['An error occurred while submitting the form. Please try again.'] });
+        } finally {
+            setIsSubmitting(false); // Stop loading state
         }
     };
 
@@ -79,7 +91,11 @@ export default function Register() {
                             placeholder="name@example.com"
                             required
                             onChange={handleChange}
+                            className={errors.email ? 'border-red-500' : ''}
                         />
+                        {errors.email?.map((msg, i) => (
+                            <div key={i} className="text-red-500 text-sm">{msg}</div>
+                        ))}
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
@@ -93,6 +109,7 @@ export default function Register() {
                                 placeholder="••••••••"
                                 required
                                 onChange={handleChange}
+                                className={errors.plainPassword ? 'border-red-500' : ''}
                             />
                             <Button
                                 type="button"
@@ -105,9 +122,17 @@ export default function Register() {
                                 <span className="sr-only">Toggle password visibility</span>
                             </Button>
                         </div>
+                        {errors.plainPassword?.map((msg, i) => (
+                            <div key={i} className="text-red-500 text-sm">{msg}</div>
+                        ))}
                     </div>
-                    <Button type="submit" className="w-full">
-                        Sign Up
+
+                    {errors.registration_form?.map((msg, i) => (
+                        <div key={i} className="text-red-500 text-sm">{msg}</div>
+                    ))}
+
+                    <Button type="submit" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? 'Submitting...' : 'Sign Up'}
                     </Button>
                 </form>
                 <div className="relative">
