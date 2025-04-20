@@ -20,7 +20,7 @@ export default function Home() {
                         </div>
                         <div className="flex flex-col gap-2 min-[400px]:flex-row">
                             <Button asChild size="lg">
-                                <a href="/register">
+                                <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Register">
                                     Get Started <ArrowRight className="ml-2 h-4 w-4"/>
                                 </a>
                             </Button>
@@ -221,7 +221,7 @@ export default function Home() {
                     </div>
                     <div className="flex flex-col gap-2 min-[400px]:flex-row">
                         <Button asChild size="lg">
-                            <a href="/register">
+                            <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Register">
                                 Sign Up Now <ArrowRight className="ml-2 h-4 w-4"/>
                             </a>
                         </Button>

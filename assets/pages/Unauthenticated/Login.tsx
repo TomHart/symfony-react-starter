@@ -77,7 +77,7 @@ export default function Login() {
         </div>
         <div className="text-center text-sm">
             Don't have an account?{" "}
-            <a href="/register" className="text-primary hover:underline">
+            <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Register" className="text-primary hover:underline">
                 Register
             </a>
         </div>

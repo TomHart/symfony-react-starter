@@ -6,11 +6,11 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 Encore
-    .setOutputPath('public/build/index')
-    .setPublicPath('/build/index')
-    .addEntry('index', './assets/index.tsx')
+    .setOutputPath('public/build/unauthenticated')
+    .setPublicPath('/build/unauthenticated')
+    .addEntry('unauthenticated', './assets/unauthenticated.tsx')
 
-    // .splitEntryChunks()
+    .splitEntryChunks()
     .enableSingleRuntimeChunk()
 
     .cleanupOutputBeforeBuild()
@@ -37,17 +37,17 @@ Encore
         watchOptions.ignored = /node_modules|public\/build/; // Ignore these directories
     })
 
-const indexConfig = Encore.getWebpackConfig();
-indexConfig.name = 'index';
+const unauthenticatedConfig = Encore.getWebpackConfig();
 
 // Encore.reset();
 //
 // Encore
-//     .setOutputPath('public/build/admin')
-//     .setPublicPath('/build/admin')
-//     .addEntry('admin', './assets/admin/index.tsx')
 //
-//     .splitEntryChunks()
+//     .setOutputPath('public/build/unauthenticated')
+//     .setPublicPath('/build/unauthenticated')
+//     .addEntry('admin', './assets/unauthenticated.tsx')
+//
+//     // .splitEntryChunks()
 //     .enableSingleRuntimeChunk()
 //
 //     .cleanupOutputBeforeBuild()
@@ -55,26 +55,28 @@ indexConfig.name = 'index';
 //     .enableSourceMaps(!Encore.isProduction())
 //     .enableVersioning(Encore.isProduction())
 //
+//     .enablePostCssLoader()
+//
 //     .configureBabelPresetEnv((config) => {
 //         config.useBuiltIns = 'usage';
 //         config.corejs = 3;
 //     })
 //
-//     .enableTypeScriptLoader(function (tsConfig) {
-//     })
+//     .enableTypeScriptLoader()
 //     .enableReactPreset()
 //     .enableSassLoader()
 //
-//     .configureCssLoader(options => {
-//         options.modules = {
-//             localIdentName: '[local]'
-//         }
+//     .addAliases({
+//         '@': path.resolve(__dirname, 'assets'),
+//     })
+//
+//     .configureWatchOptions((watchOptions) => {
+//         watchOptions.ignored = /node_modules|public\/build/; // Ignore these directories
 //     })
 // ;
 // const adminConfig = Encore.getWebpackConfig();
-// adminConfig.name = 'admin';
 
 module.exports = [
-    indexConfig,
+    unauthenticatedConfig,
     // adminConfig
 ];

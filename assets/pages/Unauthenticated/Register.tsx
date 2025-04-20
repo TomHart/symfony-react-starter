@@ -52,7 +52,6 @@ export default function Register() {
             });
 
             if (response.ok) {
-                // Handle success (e.g., show message, redirect)
                 console.log('User registered successfully');
 
                 window.location.href = '/admin';
@@ -65,7 +64,7 @@ export default function Register() {
             }
         } catch (error) {
             console.error('Error submitting form:', error);
-            setErrors({ general: ['An error occurred while submitting the form. Please try again.'] });
+            setErrors({ registration_form: ['An error occurred while submitting the form. Please try again.'] });
         } finally {
             setIsSubmitting(false); // Stop loading state
         }
@@ -155,7 +154,7 @@ export default function Register() {
             </div>
             <div className="text-center text-sm">
                 Have an account already?{' '}
-                <a href="/login" className="text-primary hover:underline">
+                <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Login" className="text-primary hover:underline">
                     Login
                 </a>
             </div>
