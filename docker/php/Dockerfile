@@ -62,7 +62,7 @@ RUN ls -lash; \
 FROM build as final
 
 USER root
-RUN apt install -y nginx supervisor mysql-client;
+RUN apt install -y nginx supervisor mycli iputils-ping;
 
 COPY --chown=www-data:www-data ./docker/php/default.conf /etc/nginx/sites-available/default
 COPY --chown=www-data:www-data ./docker/php/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -74,3 +74,4 @@ RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 USER www-data
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# supervisord -c /etc/supervisor/conf.d/supervisord.conf

@@ -28,7 +28,7 @@ build:
 run-prod:
 	docker run \
 		-it \
-		--env-file .env \
+		-v ./.env:/var/www/html/.env \
 		-p 80:80 \
 		--link symfony-scaffolding-mariadb-1:mariadb \
-		--network symfony-scaffolding_default app bash
+		--network symfony-scaffolding_default app
