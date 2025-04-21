@@ -5,6 +5,7 @@ import {Button} from "@/components/ui/button"
 import {Checkbox} from "@/components/ui/checkbox"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
+import {useSymfonyForm} from "@/hooks/useSymfonyForm";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false)
@@ -13,16 +14,37 @@ export default function Login() {
         setShowPassword(!showPassword)
     }
 
+    const {
+        formData,
+        errors,
+        isSubmitting,
+        handleChange,
+        handleSubmit,
+    } = useSymfonyForm({
+        submitUrl: '/login',
+        csrfFieldName: '_csrf_token',
+        initialData: {
+            email: '',
+            password: '',
+            _csrf_token: ''
+        },
+        onSuccess: (response: Response) => {
+            console.log(response);
+            // window.location.href = '/admin';
+        },
+    });
+
     return <div className="m-auto w-full max-w-md space-y-8">
         <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold">Welcome back</h1>
             <p className="text-muted-foreground">Enter your credentials to access your account</p>
         </div>
         <div className="space-y-6">
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="name@example.com" required/>
+                    <Input id="email" name="email" type="email" placeholder="name@example.com" required
+                           onChange={handleChange}/>
                 </div>
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -32,7 +54,9 @@ export default function Login() {
                         </a>
                     </div>
                     <div className="relative">
-                        <Input id="password" type={showPassword ? "text" : "password"} placeholder="••••••••" required/>
+                        <Input id="password" name="password" type={showPassword ? "text" : "password"}
+                               placeholder="••••••••" required
+                               onChange={handleChange}/>
                         <Button
                             type="button"
                             variant="ghost"
@@ -54,8 +78,13 @@ export default function Login() {
                         Remember me
                     </Label>
                 </div>
-                <Button type="submit" className="w-full">
-                    Sign in
+
+                {errors.general?.map((msg, i) => (
+                    <div key={i} className="text-red-500 text-sm">{msg}</div>
+                ))}
+
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? 'Submitting...' : 'Sign Up'}
                 </Button>
             </form>
             <div className="relative">
@@ -77,7 +106,8 @@ export default function Login() {
         </div>
         <div className="text-center text-sm">
             Don't have an account?{" "}
-            <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Register" className="text-primary hover:underline">
+            <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Register"
+               className="text-primary hover:underline">
                 Register
             </a>
         </div>

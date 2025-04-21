@@ -8,7 +8,9 @@ import useCsrfToken from "@/hooks/useCsrfToken";
 
 export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
-    const { csrfToken, error, isLoading } = useCsrfToken(); // Get CSRF token
+    const { csrfToken, error, isLoading } = useCsrfToken({
+        namespace: 'registration_form'
+    });
 
     const [formData, setFormData] = useState({
         email: '',

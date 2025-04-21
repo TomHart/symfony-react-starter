@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,7 +12,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
@@ -28,12 +31,12 @@ class LoginFormAuthenticator extends AbstractAuthenticator implements Authentica
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const string LOGIN_ROUTE = 'app_login';
 
-    private $entityManager;
-    private $urlGenerator;
-    private $csrfTokenManager;
-    private $passwordHasher;
+    private EntityManagerInterface $entityManager;
+    private UrlGeneratorInterface $urlGenerator;
+    private CsrfTokenManagerInterface $csrfTokenManager;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -83,18 +86,29 @@ class LoginFormAuthenticator extends AbstractAuthenticator implements Authentica
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('app_admin'));
+        return new JsonResponse(['success' => true]);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $request->getSession()->getFlashBag()->add('error', 'Authentication failed.');
 
-        return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
+        $key = match ($exception::class) {
+            InvalidCsrfTokenException::class => '_csrf_token',
+            CustomUserMessageAuthenticationException::class => 'email',
+            BadCredentialsException::class => match ($exception->getMessage()) {
+                'Invalid credentials.' => 'email',
+                'The presented password is invalid.' => 'password',
+                default => 'general',
+            },
+            default => 'general',
+        };
+
+        return new JsonResponse(['errors' => [$key => [$exception->getMessage()]]], Response::HTTP_BAD_REQUEST);
     }
 
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
-        return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
+        return new RedirectResponse('/#/login');
     }
 }

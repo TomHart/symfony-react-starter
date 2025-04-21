@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
+import {useEffect, useState} from 'react';
 
-function useCsrfToken() {
+type UseCsrfTokenOptions = {
+    namespace: string;
+};
+
+function useCsrfToken({namespace = 'authenticate'}: UseCsrfTokenOptions) {
     const [csrfToken, setCsrfToken] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -10,8 +14,12 @@ function useCsrfToken() {
             setIsLoading(true); // Set loading state
             try {
                 const response = await fetch('/csrf-token', {
-                    method: 'GET',
-                    credentials: 'include', // Ensure cookies are sent for the current session
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({namespace}),
                 });
 
                 if (!response.ok) {

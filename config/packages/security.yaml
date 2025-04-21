@@ -18,10 +18,7 @@ security:
             lazy: true
             provider: app_user_provider
 
-            remember_me:
-                lifetime: 604800 # 1 week in seconds
-                path: /
-                always_remember_me: true
+            remember_me: true
 
             custom_authenticators:
                 - App\Security\LoginFormAuthenticator
