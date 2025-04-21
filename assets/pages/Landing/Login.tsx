@@ -1,18 +1,12 @@
-import React, {useState} from 'react'
-import {ArrowLeft, Eye, EyeOff} from "lucide-react"
+import React from 'react'
+import {ArrowLeft} from "lucide-react"
 
 import {Button} from "@/components/ui/button"
-import {Checkbox} from "@/components/ui/checkbox"
-import {Input} from "@/components/ui/input"
-import {Label} from "@/components/ui/label"
 import {useSymfonyForm} from "@/hooks/useSymfonyForm";
+import EmailInput from "@/components/form/EmailInput";
+import PasswordInput from "@/components/form/PasswordInput";
 
 export default function Login() {
-    const [showPassword, setShowPassword] = useState(false)
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword)
-    }
 
     const {
         formData,
@@ -29,8 +23,9 @@ export default function Login() {
             _csrf_token: ''
         },
         onSuccess: (response: Response) => {
-            console.log(response);
-            // window.location.href = '/admin';
+            if (response.ok && response.redirected) {
+                window.location.href = response.url;
+            }
         },
     });
 
@@ -41,43 +36,21 @@ export default function Login() {
         </div>
         <div className="space-y-6">
             <form className="space-y-4" onSubmit={handleSubmit}>
-                <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" placeholder="name@example.com" required
-                           onChange={handleChange}/>
-                </div>
-                <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                        <Label htmlFor="password">Password</Label>
-                        <a href="/forgot-password" className="text-sm text-primary hover:underline">
-                            Forgot password?
-                        </a>
-                    </div>
-                    <div className="relative">
-                        <Input id="password" name="password" type={showPassword ? "text" : "password"}
-                               placeholder="••••••••" required
-                               onChange={handleChange}/>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-2 top-1/2 -translate-y-1/2"
-                            onClick={togglePasswordVisibility}
-                        >
-                            {showPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}
-                            <span className="sr-only">Toggle password visibility</span>
-                        </Button>
-                    </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Checkbox id="remember"/>
-                    <Label
-                        htmlFor="remember"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                        Remember me
-                    </Label>
-                </div>
+                <EmailInput handleChange={handleChange} errors={errors}/>
+                <PasswordInput
+                    errorPasswordField='password'
+                    handleChange={handleChange}
+                    errors={errors}
+                />
+                {/*<div className="flex items-center space-x-2">*/}
+                {/*    <Checkbox id="remember"/>*/}
+                {/*    <Label*/}
+                {/*        htmlFor="remember"*/}
+                {/*        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"*/}
+                {/*    >*/}
+                {/*        Remember me*/}
+                {/*    </Label>*/}
+                {/*</div>*/}
 
                 {errors.general?.map((msg, i) => (
                     <div key={i} className="text-red-500 text-sm">{msg}</div>
