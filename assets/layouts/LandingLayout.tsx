@@ -1,10 +1,15 @@
 import React from "react"
 import {Button} from "@/components/ui/button";
 import {Link} from "react-router-dom";
+import {useUser} from "@/provider/UserContext";
 
 export default function LandingLayout({children}: Readonly<{ children: React.ReactNode }>) {
+    const {user, loading, error} = useUser();
+
+    console.log(user);
     return <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header
+            className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container m-auto @container flex h-16 items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Link to="/" className="font-semibold text-xl">
@@ -32,22 +37,40 @@ export default function LandingLayout({children}: Readonly<{ children: React.Rea
                     </a>
                 </nav>
                 <div className="flex items-center gap-4">
-                    <Link
-                        to="/login"
-                        className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        Login
-                    </Link>
-                    <Button asChild variant="outline">
-                        <Link to="/register">Register</Link>
-                    </Button>
-                    <Button asChild>
-                        <a href="/dashboard">Dashboard</a>
-                    </Button>
+                    {loading ?
+                        <span
+                            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                            Loading...
+                        </span> : null}
+                    {!loading && !user ?
+                        <>
+                            <Link
+                                to="/login"
+                                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                                Login
+                            </Link>
+                            <Button asChild variant="outline">
+                                <Link to="/register">Register</Link>
+                            </Button>
+                        </> : null}
+                    {!loading && user ?
+                        <>
+                            <a
+                                href="/logout"
+                                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                                Logout
+                            </a>
+                            <Button asChild>
+                                <a href="/admin">Admin</a>
+                            </Button>
+                        </> : null}
                 </div>
             </div>
         </header>
-        <main className="container @container m-auto flex flex-col flex-1 items-center justify-center py-6 md:py-12 lg:py-16 xl:py-24">
+        <main
+            className="container @container m-auto flex flex-col flex-1 items-center justify-center py-6 md:py-12 lg:py-16 xl:py-24">
             {children}
         </main>
         <footer className="w-full border-t py-6 md:py-0">

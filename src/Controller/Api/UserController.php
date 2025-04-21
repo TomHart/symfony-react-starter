@@ -25,13 +25,13 @@ class UserController extends AbstractController
         return $this->json($user, Response::HTTP_OK, [], ['groups' => ['api']]);
     }
 
-    #[Route('/users', name: 'user_list')]
-    public function index(EntityManagerInterface $em, SerializerInterface $serializer): Response
-    {
-        $users = $em->getRepository(User::class)->findAll();
-
-        return new JsonResponse(json_decode($serializer->serialize($users, 'json')));
-    }
+//    #[Route('/users', name: 'user_list')]
+//    public function index(EntityManagerInterface $em, SerializerInterface $serializer): Response
+//    {
+//        $users = $em->getRepository(User::class)->findAll();
+//
+//        return new JsonResponse(json_decode($serializer->serialize($users, 'json')));
+//    }
 
     #[Route('/user/{id}', name: 'api_user_update', methods: ['POST'])]
     public function updateUserAction(int $id, Request $request, EntityManagerInterface $em): Response

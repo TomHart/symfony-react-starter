@@ -23,8 +23,8 @@ export default function Login() {
             _csrf_token: ''
         },
         onSuccess: (response: Response) => {
-            if (response.ok && response.redirected) {
-                window.location.href = response.url;
+            if (response.ok) {
+                window.location.href = '/admin';
             }
         },
     });
