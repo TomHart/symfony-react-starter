@@ -11,10 +11,32 @@ import {Switch} from "@/components/ui/switch"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {useUser} from "@/provider/UserContext";
+import {useSymfonyForm} from "@/hooks/useSymfonyForm";
 
 export default function ProfileEdit() {
 
     const {user, loading, error} = useUser();
+    const {
+        // formData,
+        // errors,
+        // isSubmitting,
+        // handleChange,
+        // handleSubmit,
+    } = useSymfonyForm({
+        csrfNamespace: 'update_user',
+        submitUrl: `/user/${user?.id}`,
+        formKey: "update_user_form",
+        csrfFieldName: '_csrf_token',
+        initialData: {
+            email: user?.email,
+            _csrf_token: ''
+        },
+        onSuccess: (response: Response) => {
+            if (response.ok) {
+                window.location.href = '/admin';
+            }
+        },
+    })
 
     const [showPassword, setShowPassword] = useState(false)
     const [showNewPassword, setShowNewPassword] = useState(false)
