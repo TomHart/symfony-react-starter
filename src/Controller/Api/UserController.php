@@ -2,15 +2,13 @@
 
 namespace App\Controller\Api;
 
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Form\UpdateUserFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
@@ -45,7 +43,11 @@ class UserController extends AbstractController
         $form = $this->createForm(UpdateUserFormType::class, $user);
         $form->handleRequest($request);
         if (!$form->isSubmitted() || !$form->isValid()) {
-            $errors = $form->getErrors(true);
+            $errors = [];
+            foreach ($form->getErrors(true) as $error) {
+                $formField = $error->getOrigin()->getName() ?: 'general';
+                $errors[$formField][] = $error->getMessage();
+            }
             return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
         }
 

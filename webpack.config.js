@@ -35,7 +35,7 @@ Encore
     })
 
     .configureWatchOptions((watchOptions) => {
-        watchOptions.ignored = /node_modules|public\/build/; // Ignore these directories
+        watchOptions.ignored = /node_modules|public\/build|src|var|vendor/; // Ignore these directories
     })
 
 const landingConfig = Encore.getWebpackConfig();

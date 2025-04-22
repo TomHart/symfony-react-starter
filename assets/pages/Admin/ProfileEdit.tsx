@@ -1,35 +1,38 @@
 import React, {useState} from "react"
-import {Camera, ChevronRight, Eye, EyeOff} from "lucide-react"
+import {Eye, EyeOff} from "lucide-react"
 
 import {Button} from "@/components/ui/button"
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import {Separator} from "@/components/ui/separator"
-import {Textarea} from "@/components/ui/textarea"
-import {Switch} from "@/components/ui/switch"
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {useUser} from "@/provider/UserContext";
 import {useSymfonyForm} from "@/hooks/useSymfonyForm";
+import EmailInput from "@/components/form/EmailInput";
+import Loading from "@/pages/Landing/Loading";
 
 export default function ProfileEdit() {
 
     const {user, loading, error} = useUser();
+
+    if (loading) {
+        return <Loading/>;
+    }
+
     const {
-        // formData,
-        // errors,
-        // isSubmitting,
-        // handleChange,
-        // handleSubmit,
+        formData,
+        errors,
+        isSubmitting,
+        isCsrfLoading,
+        handleChange,
+        handleSubmit,
     } = useSymfonyForm({
         csrfNamespace: 'update_user',
-        submitUrl: `/user/${user?.id}`,
-        formKey: "update_user_form",
-        csrfFieldName: '_csrf_token',
+        submitUrl: `/api/user/${user?.id}`,
+        csrfFieldName: '_token',
         initialData: {
             email: user?.email,
-            _csrf_token: ''
+            _token: ''
         },
         onSuccess: (response: Response) => {
             if (response.ok) {
@@ -132,57 +135,65 @@ export default function ProfileEdit() {
 
                     {/* Personal Information */}
                     <Card>
-                        <CardHeader>
-                            <CardTitle>Personal Information</CardTitle>
-                            <CardDescription>Update your personal details</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            {/*<div className="grid gap-4 sm:grid-cols-2">*/}
-                            {/*    <div className="space-y-2">*/}
-                            {/*        <Label htmlFor="first-name">First name</Label>*/}
-                            {/*        <Input id="first-name" defaultValue="John"/>*/}
-                            {/*    </div>*/}
-                            {/*    <div className="space-y-2">*/}
-                            {/*        <Label htmlFor="last-name">Last name</Label>*/}
-                            {/*        <Input id="last-name" defaultValue="Doe"/>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input id="email" type="email" defaultValue={user?.email}/>
-                                <p className="text-xs text-muted-foreground">
-                                    This email will be used for account-related notifications
-                                </p>
-                            </div>
-                            {/*<div className="space-y-2">*/}
-                            {/*    <Label htmlFor="phone">Phone number</Label>*/}
-                            {/*    <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567"/>*/}
-                            {/*</div>*/}
-                            {/*<div className="space-y-2">*/}
-                            {/*    <Label htmlFor="bio">Bio</Label>*/}
-                            {/*    <Textarea*/}
-                            {/*        id="bio"*/}
-                            {/*        placeholder="Write a short bio about yourself"*/}
-                            {/*        defaultValue="Product Manager with 5+ years of experience in SaaS products."*/}
-                            {/*        className="min-h-[100px]"*/}
-                            {/*    />*/}
-                            {/*    <p className="text-xs text-muted-foreground">Brief description for your profile</p>*/}
-                            {/*</div>*/}
-                            {/*<div className="grid gap-4 sm:grid-cols-2">*/}
-                            {/*    <div className="space-y-2">*/}
-                            {/*        <Label htmlFor="company">Company</Label>*/}
-                            {/*        <Input id="company" defaultValue="Acme Inc."/>*/}
-                            {/*    </div>*/}
-                            {/*    <div className="space-y-2">*/}
-                            {/*        <Label htmlFor="role">Job title</Label>*/}
-                            {/*        <Input id="role" defaultValue="Product Manager"/>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
-                        </CardContent>
-                        <CardFooter className="flex justify-end gap-2">
-                            <Button variant="outline">Cancel</Button>
-                            <Button>Save changes</Button>
-                        </CardFooter>
+                        <form onSubmit={handleSubmit}>
+                            <CardHeader>
+                                <CardTitle>Personal Information</CardTitle>
+                                <CardDescription>Update your personal details</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                {/*<div className="grid gap-4 sm:grid-cols-2">*/}
+                                {/*    <div className="space-y-2">*/}
+                                {/*        <Label htmlFor="first-name">First name</Label>*/}
+                                {/*        <Input id="first-name" defaultValue="John"/>*/}
+                                {/*    </div>*/}
+                                {/*    <div className="space-y-2">*/}
+                                {/*        <Label htmlFor="last-name">Last name</Label>*/}
+                                {/*        <Input id="last-name" defaultValue="Doe"/>*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
+                                <div className="space-y-2">
+                                    <EmailInput handleChange={handleChange}
+                                                errors={errors}
+                                                defaultValue={formData.email}
+                                                meta="This email will be used for account-related notifications"/>
+                                </div>
+                                {/*<div className="space-y-2">*/}
+                                {/*    <Label htmlFor="phone">Phone number</Label>*/}
+                                {/*    <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567"/>*/}
+                                {/*</div>*/}
+                                {/*<div className="space-y-2">*/}
+                                {/*    <Label htmlFor="bio">Bio</Label>*/}
+                                {/*    <Textarea*/}
+                                {/*        id="bio"*/}
+                                {/*        placeholder="Write a short bio about yourself"*/}
+                                {/*        defaultValue="Product Manager with 5+ years of experience in SaaS products."*/}
+                                {/*        className="min-h-[100px]"*/}
+                                {/*    />*/}
+                                {/*    <p className="text-xs text-muted-foreground">Brief description for your profile</p>*/}
+                                {/*</div>*/}
+                                {/*<div className="grid gap-4 sm:grid-cols-2">*/}
+                                {/*    <div className="space-y-2">*/}
+                                {/*        <Label htmlFor="company">Company</Label>*/}
+                                {/*        <Input id="company" defaultValue="Acme Inc."/>*/}
+                                {/*    </div>*/}
+                                {/*    <div className="space-y-2">*/}
+                                {/*        <Label htmlFor="role">Job title</Label>*/}
+                                {/*        <Input id="role" defaultValue="Product Manager"/>*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
+                            </CardContent>
+                            <CardFooter className="flex justify-end gap-2">
+                                <div className="flex flex-col items-end">
+                                    {errors.general?.map((msg, i) => (
+                                        <p key={i} className="text-red-500 text-sm">{msg}</p>
+                                    ))}
+
+                                    <Button type="submit" disabled={isSubmitting || isCsrfLoading}>
+                                        {isSubmitting ? 'Saving...' : (isCsrfLoading ? 'Preparing...' : 'Save changes')}
+                                    </Button>
+                                </div>
+                            </CardFooter>
+                        </form>
                     </Card>
                 </TabsContent>
 
