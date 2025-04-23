@@ -38,7 +38,7 @@ export default function Login() {
             <form className="space-y-4" onSubmit={handleSubmit}>
                 <EmailInput handleChange={handleChange} errors={errors}/>
                 <PasswordInput
-                    errorPasswordField='password'
+                    fieldName='password'
                     handleChange={handleChange}
                     errors={errors}
                 />

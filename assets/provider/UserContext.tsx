@@ -6,15 +6,16 @@ export type User = {
     roles: string[];
 }
 
+type UserContextType =
+    | { user: User; loading: false; error: null }
+    | { user: null; loading: false; error: Error }
+    | { user: null; loading: true; error: null };
+
 // Create the context
-const UserContext = createContext<{
-    user: User | null;
-    loading: boolean;
-    error: any;
-}>({
+const UserContext = createContext<UserContextType>({
     user: null,
-    loading: false,
-    error: undefined,
+    loading: true,
+    error: null,
 });
 
 // Export a custom hook for easier access

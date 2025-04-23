@@ -6,10 +6,11 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
-import {useUser} from "@/provider/UserContext";
+import {User, useUser} from "@/provider/UserContext";
 import {useSymfonyForm} from "@/hooks/useSymfonyForm";
 import EmailInput from "@/components/form/EmailInput";
 import Loading from "@/pages/Landing/Loading";
+import PasswordInput from "@/components/form/PasswordInput";
 
 export default function ProfileEdit() {
 
@@ -19,44 +20,8 @@ export default function ProfileEdit() {
         return <Loading/>;
     }
 
-    const {
-        formData,
-        errors,
-        isSubmitting,
-        isCsrfLoading,
-        handleChange,
-        handleSubmit,
-    } = useSymfonyForm({
-        csrfNamespace: 'update_user',
-        submitUrl: `/api/user/${user?.id}`,
-        csrfFieldName: '_token',
-        initialData: {
-            email: user?.email,
-            _token: ''
-        },
-        onSuccess: (response: Response) => {
-            if (response.ok) {
-                window.location.href = '/admin';
-            }
-        },
-    })
-
-    const [showPassword, setShowPassword] = useState(false)
-    const [showNewPassword, setShowNewPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-
-    const togglePasswordVisibility = (field: string) => {
-        switch (field) {
-            case "current":
-                setShowPassword(!showPassword)
-                break
-            case "new":
-                setShowNewPassword(!showNewPassword)
-                break
-            case "confirm":
-                setShowConfirmPassword(!showConfirmPassword)
-                break
-        }
+    if (error) {
+        return <h1>USER ERROR</h1>;
     }
 
     return (
@@ -134,140 +99,11 @@ export default function ProfileEdit() {
                     {/*</Card>*/}
 
                     {/* Personal Information */}
-                    <Card>
-                        <form onSubmit={handleSubmit}>
-                            <CardHeader>
-                                <CardTitle>Personal Information</CardTitle>
-                                <CardDescription>Update your personal details</CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                {/*<div className="grid gap-4 sm:grid-cols-2">*/}
-                                {/*    <div className="space-y-2">*/}
-                                {/*        <Label htmlFor="first-name">First name</Label>*/}
-                                {/*        <Input id="first-name" defaultValue="John"/>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="space-y-2">*/}
-                                {/*        <Label htmlFor="last-name">Last name</Label>*/}
-                                {/*        <Input id="last-name" defaultValue="Doe"/>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-                                <div className="space-y-2">
-                                    <EmailInput handleChange={handleChange}
-                                                errors={errors}
-                                                defaultValue={formData.email}
-                                                meta="This email will be used for account-related notifications"/>
-                                </div>
-                                {/*<div className="space-y-2">*/}
-                                {/*    <Label htmlFor="phone">Phone number</Label>*/}
-                                {/*    <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567"/>*/}
-                                {/*</div>*/}
-                                {/*<div className="space-y-2">*/}
-                                {/*    <Label htmlFor="bio">Bio</Label>*/}
-                                {/*    <Textarea*/}
-                                {/*        id="bio"*/}
-                                {/*        placeholder="Write a short bio about yourself"*/}
-                                {/*        defaultValue="Product Manager with 5+ years of experience in SaaS products."*/}
-                                {/*        className="min-h-[100px]"*/}
-                                {/*    />*/}
-                                {/*    <p className="text-xs text-muted-foreground">Brief description for your profile</p>*/}
-                                {/*</div>*/}
-                                {/*<div className="grid gap-4 sm:grid-cols-2">*/}
-                                {/*    <div className="space-y-2">*/}
-                                {/*        <Label htmlFor="company">Company</Label>*/}
-                                {/*        <Input id="company" defaultValue="Acme Inc."/>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="space-y-2">*/}
-                                {/*        <Label htmlFor="role">Job title</Label>*/}
-                                {/*        <Input id="role" defaultValue="Product Manager"/>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-                            </CardContent>
-                            <CardFooter className="flex justify-end gap-2">
-                                <div className="flex flex-col items-end">
-                                    {errors.general?.map((msg, i) => (
-                                        <p key={i} className="text-red-500 text-sm">{msg}</p>
-                                    ))}
-
-                                    <Button type="submit" disabled={isSubmitting || isCsrfLoading}>
-                                        {isSubmitting ? 'Saving...' : (isCsrfLoading ? 'Preparing...' : 'Save changes')}
-                                    </Button>
-                                </div>
-                            </CardFooter>
-                        </form>
-                    </Card>
+                    <PersonalInformationCard user={user}/>
                 </TabsContent>
 
                 <TabsContent value="password" className="space-y-8">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Change Password</CardTitle>
-                            <CardDescription>Update your password to keep your account secure</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="space-y-2">
-                                <Label htmlFor="current-password">Current password</Label>
-                                <div className="relative">
-                                    <Input id="current-password" type={showPassword ? "text" : "password"}
-                                           placeholder="••••••••"/>
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute right-2 top-1/2 -translate-y-1/2"
-                                        onClick={() => togglePasswordVisibility("current")}
-                                    >
-                                        {showPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}
-                                        <span className="sr-only">Toggle password visibility</span>
-                                    </Button>
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="new-password">New password</Label>
-                                <div className="relative">
-                                    <Input id="new-password" type={showNewPassword ? "text" : "password"}
-                                           placeholder="••••••••"/>
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute right-2 top-1/2 -translate-y-1/2"
-                                        onClick={() => togglePasswordVisibility("new")}
-                                    >
-                                        {showNewPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}
-                                        <span className="sr-only">Toggle password visibility</span>
-                                    </Button>
-                                </div>
-                                <p className="text-xs text-muted-foreground">
-                                    Password must be at least 8 characters and include a number and a symbol
-                                </p>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="confirm-password">Confirm new password</Label>
-                                <div className="relative">
-                                    <Input
-                                        id="confirm-password"
-                                        type={showConfirmPassword ? "text" : "password"}
-                                        placeholder="••••••••"
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute right-2 top-1/2 -translate-y-1/2"
-                                        onClick={() => togglePasswordVisibility("confirm")}
-                                    >
-                                        {showConfirmPassword ? <EyeOff className="h-4 w-4"/> :
-                                            <Eye className="h-4 w-4"/>}
-                                        <span className="sr-only">Toggle password visibility</span>
-                                    </Button>
-                                </div>
-                            </div>
-                        </CardContent>
-                        <CardFooter className="flex justify-end gap-2">
-                            <Button variant="outline">Cancel</Button>
-                            <Button>Update password</Button>
-                        </CardFooter>
-                    </Card>
+                    <PasswordCard user={user}/>
                 </TabsContent>
 
                 {/*<TabsContent value="notifications" className="space-y-8">*/}
@@ -443,4 +279,184 @@ export default function ProfileEdit() {
             </Tabs>
         </div>
     )
+}
+
+function PersonalInformationCard({user}: { user: User }) {
+
+    const {
+        formData,
+        errors,
+        isSubmitting,
+        isCsrfLoading,
+        handleChange,
+        handleSubmit,
+    } = useSymfonyForm({
+        csrfNamespace: 'update_email',
+        submitUrl: `/api/user/${user?.id}/email`,
+        csrfFieldName: '_token',
+        initialData: {
+            email: user?.email,
+            _token: ''
+        },
+        onSuccess: (response: Response) => {
+            if (response.ok) {
+                window.location.href = '/admin';
+            }
+        },
+    })
+
+    return <Card>
+        <form onSubmit={handleSubmit}>
+            <CardHeader>
+                <CardTitle>Personal Information</CardTitle>
+                <CardDescription>Update your personal details</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                {/*<div className="grid gap-4 sm:grid-cols-2">*/}
+                {/*    <div className="space-y-2">*/}
+                {/*        <Label htmlFor="first-name">First name</Label>*/}
+                {/*        <Input id="first-name" defaultValue="John"/>*/}
+                {/*    </div>*/}
+                {/*    <div className="space-y-2">*/}
+                {/*        <Label htmlFor="last-name">Last name</Label>*/}
+                {/*        <Input id="last-name" defaultValue="Doe"/>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                <div className="space-y-2">
+                    <EmailInput handleChange={handleChange}
+                                errors={errors}
+                                defaultValue={formData.email}
+                                meta="This email will be used for account-related notifications"/>
+                </div>
+                {/*<div className="space-y-2">*/}
+                {/*    <Label htmlFor="phone">Phone number</Label>*/}
+                {/*    <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567"/>*/}
+                {/*</div>*/}
+                {/*<div className="space-y-2">*/}
+                {/*    <Label htmlFor="bio">Bio</Label>*/}
+                {/*    <Textarea*/}
+                {/*        id="bio"*/}
+                {/*        placeholder="Write a short bio about yourself"*/}
+                {/*        defaultValue="Product Manager with 5+ years of experience in SaaS products."*/}
+                {/*        className="min-h-[100px]"*/}
+                {/*    />*/}
+                {/*    <p className="text-xs text-muted-foreground">Brief description for your profile</p>*/}
+                {/*</div>*/}
+                {/*<div className="grid gap-4 sm:grid-cols-2">*/}
+                {/*    <div className="space-y-2">*/}
+                {/*        <Label htmlFor="company">Company</Label>*/}
+                {/*        <Input id="company" defaultValue="Acme Inc."/>*/}
+                {/*    </div>*/}
+                {/*    <div className="space-y-2">*/}
+                {/*        <Label htmlFor="role">Job title</Label>*/}
+                {/*        <Input id="role" defaultValue="Product Manager"/>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2">
+                <div className="flex flex-col items-end">
+                    {errors.general?.map((msg, i) => (
+                        <p key={i} className="text-red-500 text-sm">{msg}</p>
+                    ))}
+
+                    <Button type="submit" disabled={isSubmitting || isCsrfLoading}>
+                        {isSubmitting ? 'Saving...' : (isCsrfLoading ? 'Preparing...' : 'Save changes')}
+                    </Button>
+                </div>
+            </CardFooter>
+        </form>
+    </Card>;
+}
+
+function PasswordCard({user}: { user: User }) {
+
+    const [showPassword, setShowPassword] = useState(false)
+    const [showNewPassword, setShowNewPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+    const togglePasswordVisibility = (field: string) => {
+        switch (field) {
+            case "current":
+                setShowPassword(!showPassword)
+                break
+            case "new":
+                setShowNewPassword(!showNewPassword)
+                break
+            case "confirm":
+                setShowConfirmPassword(!showConfirmPassword)
+                break
+        }
+    }
+
+    const {
+        formData,
+        errors,
+        isSubmitting,
+        isCsrfLoading,
+        handleChange,
+        handleSubmit,
+    } = useSymfonyForm({
+        csrfNamespace: 'update_password',
+        submitUrl: `/api/user/${user?.id}/password`,
+        csrfFieldName: '_token',
+        initialData: {
+            currentPassword: '',
+            ['plainPassword[first]']: '',
+            ['plainPassword[second]']: '',
+            _token: ''
+        },
+        onSuccess: (response: Response) => {
+            if (response.ok) {
+                window.location.href = '/admin';
+            }
+        },
+    })
+
+    return <Card>
+        <form onSubmit={handleSubmit}>
+            <CardHeader>
+                <CardTitle>Change Password</CardTitle>
+                <CardDescription>Update your password to keep your account secure</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="space-y-2">
+                    <Label htmlFor="current-password">Current password</Label>
+                    <div className="relative">
+                        <PasswordInput
+                            handleChange={handleChange}
+                            errors={errors}
+                            fieldName="currentPassword"
+                        />
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="confirm-password">New password</Label>
+                    <PasswordInput
+                        handleChange={handleChange}
+                        errors={errors}
+                        fieldName="plainPassword[first]"
+                        meta="Password must be at least 8 characters and include a number and a symbol"
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="confirm-password">Confirm new password</Label>
+                    <PasswordInput
+                        handleChange={handleChange}
+                        errors={errors}
+                        fieldName="plainPassword[second]"
+                    />
+                </div>
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2">
+
+                {errors.general?.map((msg, i) => (
+                    <p key={i} className="text-red-500 text-sm">{msg}</p>
+                ))}
+
+                <Button type="submit" disabled={isSubmitting || isCsrfLoading}>
+                    {isSubmitting ? 'Updating...' : (isCsrfLoading ? 'Preparing...' : 'Update Password')}
+                </Button>
+            </CardFooter>
+        </form>
+    </Card>;
 }
