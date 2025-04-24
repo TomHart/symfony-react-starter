@@ -12,7 +12,7 @@ export default function SubmitResetPasswordRequest() {
         errors,
         handleChange,
         handleSubmit,
-        SubmitButton
+        elements
     } = useSymfonyForm({
         submitUrl: '/reset-password/reset',
         csrfFieldName: '_token',
@@ -59,11 +59,8 @@ export default function SubmitResetPasswordRequest() {
                     />
                 </div>
 
-                {errors.general?.map((msg, i) => (
-                    <div key={i} className="text-red-500 text-sm">{msg}</div>
-                ))}
-
-                <SubmitButton text="Reset" submittingText="Resetting..."/>
+                <elements.GeneralErrors />
+                <elements.SubmitButton text="Reset" submittingText="Resetting..."/>
             </form>
 
         </div>

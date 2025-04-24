@@ -9,11 +9,11 @@ import PasswordInput from "@/components/form/PasswordInput";
 export default function Login() {
 
     const {
-        formData,
         errors,
         isSubmitting,
         handleChange,
         handleSubmit,
+        elements
     } = useSymfonyForm({
         submitUrl: '/login',
         csrfFieldName: '_csrf_token',
@@ -43,23 +43,9 @@ export default function Login() {
                     showForgotPassword={true}
                     errors={errors}
                 />
-                {/*<div className="flex items-center space-x-2">*/}
-                {/*    <Checkbox id="remember"/>*/}
-                {/*    <Label*/}
-                {/*        htmlFor="remember"*/}
-                {/*        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"*/}
-                {/*    >*/}
-                {/*        Remember me*/}
-                {/*    </Label>*/}
-                {/*</div>*/}
 
-                {errors.general?.map((msg, i) => (
-                    <div key={i} className="text-red-500 text-sm">{msg}</div>
-                ))}
-
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? 'Submitting...' : 'Sign Up'}
-                </Button>
+                <elements.GeneralErrors />
+                <elements.SubmitButton text="Sign In" submittingText="Logging in..."/>
             </form>
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">

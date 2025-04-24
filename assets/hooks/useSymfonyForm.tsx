@@ -11,6 +11,13 @@ type UseSymfonyFormOptions<T> = {
     onSuccess?: (response: Response) => void;
 };
 
+type ErrorsType<T> = {
+    [K in keyof UseSymfonyFormOptions<T>["initialData"]]?: string[];
+} & {
+    general?: string[];
+    [formKey: string]: string[] | undefined;
+}
+
 export function useSymfonyForm<T extends { [key: string]: any }>(
     {
         csrfNamespace = 'authenticate',
@@ -121,6 +128,27 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         csrfError,
         handleChange,
         handleSubmit,
-        SubmitButton: SubmitButtonWrapper
+        elements: {
+            SubmitButton: SubmitButtonWrapper,
+            GeneralErrors: getGeneralErrorsDisplay(errors),
+        }
     };
+}
+
+function getGeneralErrorsDisplay(errors: ErrorsType<{ _token: string, _csrf_token: string }>) {
+    return () => (
+        <>
+            {errors._token?.map((msg, i) => (
+                <div key={i} className="text-red-500 text-sm">{msg}</div>
+            ))}
+
+            {errors._csrf_token?.map((msg, i) => (
+                <div key={i} className="text-red-500 text-sm">{msg}</div>
+            ))}
+
+            {errors.general?.map((msg, i) => (
+                <div key={i} className="text-red-500 text-sm">{msg}</div>
+            ))}
+        </>
+    );
 }

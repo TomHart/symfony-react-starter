@@ -35,7 +35,7 @@ export const UserProvider = ({children}: Readonly<{ children: React.ReactNode }>
                 const data = await res.json();
                 setUser(data);
             } catch (err) {
-                console.error(err);
+                // console.error(err);
                 setError(err);
             } finally {
                 setLoading(false);
