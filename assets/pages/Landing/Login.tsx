@@ -40,6 +40,7 @@ export default function Login() {
                 <PasswordInput
                     fieldName='password'
                     handleChange={handleChange}
+                    showForgotPassword={true}
                     errors={errors}
                 />
                 {/*<div className="flex items-center space-x-2">*/}
@@ -92,3 +93,13 @@ export default function Login() {
         </div>
     </div>;
 }
+
+// Disable Cache
+// 12 requests
+// 5.43 MB / 1.14 MB transferred
+// Finish: 5.26 s
+// DOMContentLoaded: 5.16 s
+// load: 5.16 s
+//
+// reset_password_request_form[email]	"a3@b.com"
+// reset_password_request_form[_token]	"50c5e5a8c5a.6ulEZ6Cc32Iy_0RIEwtfx8E0Mx6gEdVqfQVneYIU1qU.h64uJvXylT1dxiJwZ31sjqNFQXONaYo8CVApC9h9verTozYyyOWHMFinfA"

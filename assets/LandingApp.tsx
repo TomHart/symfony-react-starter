@@ -5,6 +5,8 @@ import Home from "@/pages/Landing/Home";
 import Register from "@/pages/Landing/Register";
 import Login from "@/pages/Landing/Login";
 import {UserProvider} from "@/provider/UserContext";
+import SubmitResetPasswordRequest from "@/pages/Landing/SubmitResetPasswordRequest";
+import PasswordRequestPage from "@/pages/Landing/PasswordRequestPage";
 
 export default function LandingApp(): React.JSX.Element {
 
@@ -16,6 +18,8 @@ export default function LandingApp(): React.JSX.Element {
                         <Route path="/" element={<Home/>}/>
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/register" element={<Register/>}/>
+                        <Route path="/reset-password" element={<SubmitResetPasswordRequest/>}/>
+                        <Route path="/reset-password/reset" element={<PasswordRequestPage />}/>
                     </Routes>
                 </LandingLayout>
             </UserProvider>

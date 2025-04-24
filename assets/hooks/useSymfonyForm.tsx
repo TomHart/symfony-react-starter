@@ -1,5 +1,6 @@
-import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import useCsrfToken from './useCsrfToken';
+import SubmitButton from "@/components/form/SubmitButton";
 
 type UseSymfonyFormOptions<T> = {
     csrfNamespace?: string,
@@ -57,7 +58,13 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         const formBody = new URLSearchParams();
         for (const [key, value] of Object.entries(formData)) {
             if (formKey) {
-                formBody.append(`${formKey}[${key}]`, String(value));
+                if (key.indexOf('[') === -1) {
+                    formBody.append(`${formKey}[${key}]`, String(value));
+                } else {
+                    const split = key.split('[');
+                    formBody.append(`${formKey}[${split[0]}][${split[1]}`, String(value));
+
+                }
             } else {
                 formBody.append(`${key}`, String(value));
             }
@@ -68,6 +75,7 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
                 },
                 body: formBody.toString(),
                 credentials: 'include',
@@ -91,6 +99,19 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         }
     };
 
+    const SubmitButtonWrapper = ({text, submittingText, csrfLoadingText = 'Preparing...'}: {
+        text: string;
+        submittingText: string;
+        csrfLoadingText?: string;
+    }) => (
+        <SubmitButton
+            text={text}
+            submittingText={submittingText}
+            csrfLoadingText={csrfLoadingText}
+            isSubmitting={isSubmitting}
+            isCsrfLoading={isCsrfLoading}
+        />);
+
     return {
         formData,
         setFormData,
@@ -100,5 +121,6 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         csrfError,
         handleChange,
         handleSubmit,
+        SubmitButton: SubmitButtonWrapper
     };
 }

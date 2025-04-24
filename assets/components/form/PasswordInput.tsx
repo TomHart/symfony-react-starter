@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Eye, EyeOff} from "lucide-react";
 import {PasswordInputProps} from "@/components/form/InputTypes";
+import {Link} from "react-router-dom";
 
 export default function PasswordInput<FieldName extends string = 'password'>({
                                                                                  handleChange,
@@ -22,9 +23,9 @@ export default function PasswordInput<FieldName extends string = 'password'>({
     return <div className="space-y-2">
         {showForgotPassword ? <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            <a href="/forgot-password" className="text-sm text-primary hover:underline">
+            <Link to="/reset-password" className="text-sm text-primary hover:underline">
                 Forgot password?
-            </a>
+            </Link>
         </div> : null}
         <div className="relative">
             <Input id="password"
