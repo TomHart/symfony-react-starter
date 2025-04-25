@@ -1,76 +1,31 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import React, {useState} from 'react';
+import {ArrowLeft, Eye, EyeOff} from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import useCsrfToken from "@/hooks/useCsrfToken";
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Label} from '@/components/ui/label';
+import {useSymfonyForm} from "@/hooks/useSymfonyForm";
 
 export default function Register() {
+
+    const {
+        formData,
+        errors,
+        handleSubmit,
+        handleChange,
+        elements
+    } = useSymfonyForm({
+        csrfNamespace: 'registration_form',
+        submitUrl: '/register',
+        initialData: {
+            email: '',
+            plainPassword: '',
+            _token: ''
+        }
+    });
+
     const [showPassword, setShowPassword] = useState(false);
-    const { csrfToken, error, isLoading } = useCsrfToken({
-        namespace: 'registration_form'
-    });
 
-    const [formData, setFormData] = useState({
-        email: '',
-        plainPassword: '',
-        _token: ''
-    });
-
-    const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
-    const [errors, setErrors] = useState<{ [key: string]: string[] }>({}); // Store errors per field
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFormData((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    };
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        setIsSubmitting(true); // Set submission to true (loading state)
-        setErrors({}); // Clear any previous errors
-
-        // Start preparing the form data
-        const formBody = new URLSearchParams();
-        formData['_token'] = csrfToken;
-
-        // Append form data fields (email, password, etc.)
-        for (const [key, value] of Object.entries(formData)) {
-            formBody.append(`registration_form[${key}]`, String(value));
-        }
-
-        try {
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formBody.toString(),
-                credentials: 'include', // Ensure cookies are sent for the current session
-            });
-
-            if (response.ok) {
-                console.log('User registered successfully');
-
-                window.location.href = '/admin';
-            } else {
-                // Handle errors
-                const responseData = await response.json();
-                if (responseData.errors) {
-                    setErrors(responseData.errors); // Store the errors for each field
-                }
-            }
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            setErrors({ registration_form: ['An error occurred while submitting the form. Please try again.'] });
-        } finally {
-            setIsSubmitting(false); // Stop loading state
-        }
-    };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -133,9 +88,7 @@ export default function Register() {
                         <div key={i} className="text-red-500 text-sm">{msg}</div>
                     ))}
 
-                    <Button type="submit" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting ? 'Submitting...' : 'Sign Up'}
-                    </Button>
+                    <elements.SubmitButton text="Sign Up" submittingText="Submitting..."/>
                 </form>
                 <div className="relative">
                     <div className="mb-2 inset-0 flex items-center">

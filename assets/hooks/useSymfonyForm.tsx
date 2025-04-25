@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useState} from 'react';
 import useCsrfToken from './useCsrfToken';
 import SubmitButton from "@/components/form/SubmitButton";
 
@@ -6,7 +6,7 @@ type UseSymfonyFormOptions<T> = {
     csrfNamespace?: string,
     submitUrl: string;
     formKey?: string;
-    csrfFieldName: keyof T;
+    csrfFieldName?: keyof T;
     initialData: T;
     onSuccess?: (response: Response) => void;
 };
@@ -28,9 +28,10 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         onSuccess,
     }: UseSymfonyFormOptions<T>) {
 
-    const {csrfToken, error: csrfError, isLoading: isCsrfLoading} = useCsrfToken({
+    const {fetchCsrfToken, isLoading: isCsrfLoading} = useCsrfToken({
         namespace: csrfNamespace
     });
+
     const [formData, setFormData] = useState<T>({...initialData, [csrfFieldName]: ''});
     const [errors, setErrors] = useState<{
         [K in keyof T]?: string[];
@@ -39,15 +40,6 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         [formKey: string]: string[] | undefined;
     }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    useEffect(() => {
-        if (csrfToken) {
-            setFormData((prev) => ({
-                ...prev,
-                [csrfFieldName]: csrfToken,
-            }));
-        }
-    }, [csrfToken]);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
@@ -59,11 +51,15 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const csrfToken = await fetchCsrfToken();
         setIsSubmitting(true);
         setErrors({});
 
         const formBody = new URLSearchParams();
-        for (const [key, value] of Object.entries(formData)) {
+        const entries = Object.entries(formData);
+        entries.push([csrfFieldName as string, csrfToken]);
+        for (const [key, value] of entries) {
             if (formKey) {
                 if (key.indexOf('[') === -1) {
                     formBody.append(`${formKey}[${key}]`, String(value));
@@ -124,8 +120,6 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         setFormData,
         errors,
         isSubmitting,
-        isCsrfLoading,
-        csrfError,
         handleChange,
         handleSubmit,
         elements: {

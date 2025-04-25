@@ -286,10 +286,9 @@ function PersonalInformationCard({user}: { user: User }) {
     const {
         formData,
         errors,
-        isSubmitting,
-        isCsrfLoading,
         handleChange,
         handleSubmit,
+        elements
     } = useSymfonyForm({
         csrfNamespace: 'update_email',
         submitUrl: `/api/user/${user?.id}/email`,
@@ -355,13 +354,8 @@ function PersonalInformationCard({user}: { user: User }) {
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
                 <div className="flex flex-col items-end">
-                    {errors.general?.map((msg, i) => (
-                        <p key={i} className="text-red-500 text-sm">{msg}</p>
-                    ))}
-
-                    <Button type="submit" disabled={isSubmitting || isCsrfLoading}>
-                        {isSubmitting ? 'Saving...' : (isCsrfLoading ? 'Preparing...' : 'Save changes')}
-                    </Button>
+                    <elements.GeneralErrors/>
+                    <elements.SubmitButton text="Save changes" submittingText="Saving..." />
                 </div>
             </CardFooter>
         </form>
@@ -392,9 +386,9 @@ function PasswordCard({user}: { user: User }) {
         formData,
         errors,
         isSubmitting,
-        isCsrfLoading,
         handleChange,
         handleSubmit,
+        elements
     } = useSymfonyForm({
         csrfNamespace: 'update_password',
         submitUrl: `/api/user/${user?.id}/password`,
@@ -448,14 +442,8 @@ function PasswordCard({user}: { user: User }) {
                 </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
-
-                {errors.general?.map((msg, i) => (
-                    <p key={i} className="text-red-500 text-sm">{msg}</p>
-                ))}
-
-                <Button type="submit" disabled={isSubmitting || isCsrfLoading}>
-                    {isSubmitting ? 'Updating...' : (isCsrfLoading ? 'Preparing...' : 'Update Password')}
-                </Button>
+                <elements.GeneralErrors/>
+                <elements.SubmitButton text="Update Password" submittingText="Updating..." />
             </CardFooter>
         </form>
     </Card>;

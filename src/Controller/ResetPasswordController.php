@@ -78,61 +78,61 @@ class ResetPasswordController extends AbstractController
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, string $token = null): Response
     {
         if ($token) {
-            // We store the token in session and remove it from the URL, to avoid the URL being
-            // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
-            $this->storeTokenInSession($token);
+            // we store the token in session and remove it from the url, to avoid the url being
+            // loaded in a browser and potentially leaking the token to 3rd party javascript.
+            $this->storetokeninsession($token);
 
             return $this->redirect('/#reset-password/reset');
         }
 
-        $token = $this->getTokenFromSession();
+        $token = $this->gettokenfromsession();
         if (null === $token) {
-            throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
+            throw $this->createnotfoundexception('no reset password token found in the url or in the session.');
         }
 
         try {
-            $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
-            assert($user instanceof PasswordAuthenticatedUserInterface);
-        } catch (ResetPasswordExceptionInterface $e) {
+            $user = $this->resetpasswordhelper->validatetokenandfetchuser($token);
+            assert($user instanceof passwordauthenticateduserinterface);
+        } catch (resetpasswordexceptioninterface $e) {
             return $this->json([
                 'errors' => [
                     'general' => [
                         sprintf(
-                            'There was a problem validating your reset request - %s',
-                            $e->getReason()
+                            'there was a problem validating your reset request - %s',
+                            $e->getreason()
                         )
                     ],
                 ],
-            ], Response::HTTP_BAD_REQUEST);
+            ], response::http_bad_request);
         }
 
-        // The token is valid; allow the user to change their password.
-        $form = $this->createForm(ChangePasswordFormType::class);
-        $form->handleRequest($request);
+        // the token is valid; allow the user to change their password.
+        $form = $this->createform(changepasswordformtype::class);
+        $form->handlerequest($request);
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
+        if (!$form->issubmitted() || !$form->isvalid()) {
             $errors = [];
-            foreach ($form->getErrors(true) as $error) {
-                $formField = $error->getOrigin()->getName() ?: 'general';
-                $errors[$formField][] = $error->getMessage();
+            foreach ($form->geterrors(true) as $error) {
+                $formfield = $error->getorigin()->getname() ?: 'general';
+                $errors[$formfield][] = $error->getmessage();
             }
-            return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
+            return $this->json(['errors' => $errors], response::http_bad_request);
         }
 
-        // A password reset token should be used only once, remove it.
-        $this->resetPasswordHelper->removeResetRequest($token);
+        // a password reset token should be used only once, remove it.
+        $this->resetpasswordhelper->removeresetrequest($token);
 
-        // Encode the plain password, and set it.
-        $encodedPassword = $passwordHasher->hashPassword(
+        // encode the plain password, and set it.
+        $encodedpassword = $passwordhasher->hashpassword(
             $user,
-            $form->get('plainPassword')->getData()
+            $form->get('plainpassword')->getdata()
         );
 
-        $user->setPassword($encodedPassword);
-        $this->entityManager->flush();
+        $user->setpassword($encodedpassword);
+        $this->entitymanager->flush();
 
-        // The session is cleaned up after the password has been changed.
-        $this->cleanSessionAfterReset();
+        // the session is cleaned up after the password has been changed.
+        $this->cleansessionafterreset();
 
         return $this->json(['success' => true]);
     }
