@@ -6,7 +6,6 @@ import {useUser} from "@/provider/UserContext";
 export default function LandingLayout({children}: Readonly<{ children: React.ReactNode }>) {
     const {user, loading, error} = useUser();
 
-    console.log(user);
     return <div className="flex min-h-screen flex-col">
         <header
             className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

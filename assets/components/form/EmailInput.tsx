@@ -4,12 +4,13 @@ import React from "react";
 import {EmailInputProps} from "./InputTypes";
 
 export default function EmailInput({
-                                                                  handleChange,
-                                                                  errors,
-                                                                  meta,
-                                                                  defaultValue,
-                                                                  fieldName = 'email'
-                                                              }: EmailInputProps) {
+                                       handleChange,
+                                       errors,
+                                       meta,
+                                       defaultValue,
+                                       fieldName = 'email'
+                                   }: EmailInputProps) {
+
     return <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input
