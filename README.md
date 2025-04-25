@@ -43,9 +43,14 @@ docker-compose up -d
 ### Frontend development
 Run frontend auto-build on every change:
 ```
-make watch
+make dev
 
 # or manually
 
-yarn encore dev --watch
+yarn encore dev-server
+```
+
+### Running PHPUnit tests
+```
+make phpunit
 ```

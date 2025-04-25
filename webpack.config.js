@@ -38,8 +38,4 @@ Encore
         watchOptions.ignored = /node_modules|public\/build|src|var|vendor/; // Ignore these directories
     })
 
-const landingConfig = Encore.getWebpackConfig();
-
-module.exports = [
-    landingConfig,
-];
+module.exports = [Encore.getWebpackConfig()];

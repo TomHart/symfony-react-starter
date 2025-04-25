@@ -14,13 +14,16 @@ stop:
 	docker-compose down
 
 dev:
-	yarn encore dev-server
+	docker-compose exec -u www-data app yarn encore dev-server
 
 composer:
 	docker-compose exec -u www-data app composer install
 
 cache-clear:
 	docker-compose exec -u www-data app php bin/console cache:clear
+
+phpunit:
+	docker-compose exec -u www-data app bin/phpunit
 
 build:
 	docker build -t app -f ./docker/php/Dockerfile .
