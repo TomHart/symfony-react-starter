@@ -77,13 +77,12 @@ class ResetPasswordController extends AbstractController
     #[Route('/reset-password/reset/{token}', name: 'app_reset_password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, string $token = null): Response
     {
-        // l1JmCUpPRGLFlUl2HcZ8lV5huaA8DbvCzHT19OYA
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
             // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
             $this->storeTokenInSession($token);
 
-            return $this->redirectToRoute('app_reset_password');
+            return $this->redirect('/#reset-password/reset');
         }
 
         $token = $this->getTokenFromSession();

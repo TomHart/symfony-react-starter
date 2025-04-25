@@ -11,7 +11,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo 'date.timezone = "Europe/Moscow"\n' > /usr/local/etc/php/conf.d/timezone.ini
+    && echo 'date.timezone = "Europe/London"\n' > /usr/local/etc/php/conf.d/timezone.ini
 
 RUN docker-php-ext-configure \
     zip \
