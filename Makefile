@@ -13,14 +13,14 @@ run:
 stop:
 	docker-compose down
 
-watch:
-	docker-compose exec -u www-data front yarn encore dev --watch
+dev:
+	yarn encore dev-server
 
 composer:
-	docker-compose exec -u www-data front composer install
+	docker-compose exec -u www-data app composer install
 
-cache:
-	docker-compose exec -u www-data front php bin/console cache:clear
+cache-clear:
+	docker-compose exec -u www-data app php bin/console cache:clear
 
 build:
 	docker build -t app -f ./docker/php/Dockerfile .

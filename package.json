@@ -1,6 +1,6 @@
 {
-    "license": "UNLICENSED",
-    "private": true,
+    "license": "GPL-3.0-or-later",
+    "private": false,
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
