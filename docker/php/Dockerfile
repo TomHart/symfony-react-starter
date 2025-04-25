@@ -6,7 +6,8 @@ RUN rm -rf /var/lib/apt/lists/* \
     git \
     libzip-dev \
     zip \
-    unzip
+    unzip \
+    libicu-dev
 
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug \
@@ -18,7 +19,8 @@ RUN docker-php-ext-configure \
     && docker-php-ext-install \
     pdo \
     pdo_mysql \
-    zip
+    zip \
+    intl
 
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
