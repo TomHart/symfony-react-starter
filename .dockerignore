@@ -2,7 +2,7 @@
 ./public/build
 ./var
 ./vendor
-./.env*
+./.env.*
 ./build.sh
 ./docker-compose.yml
 ./LICENSE

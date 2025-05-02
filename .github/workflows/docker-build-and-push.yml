@@ -22,14 +22,28 @@ jobs:
                     username: ${{ secrets.REGISTRY_USERNAME }}
                     password: ${{ secrets.REGISTRY_PASSWORD }}
 
-            # Build the Docker image
-            -   name: Build Docker image
-                run: |
-                    REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-                    docker build -f ./docker/php/Dockerfile -t registry.tom-hart.net/${REPO_NAME}:latest .
 
-            # Push the Docker image to the private registry
-            -   name: Push Docker image
-                run: |
-                    REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-                    docker push registry.tom-hart.net/${REPO_NAME}:latest
+
+            -   name: Set up Docker Buildx
+                uses: docker/setup-buildx-action@v3
+
+            -   name: Build and push Docker image
+                uses: docker/build-push-action@v5
+                with:
+                    context: .
+                    file: ./docker/php/Dockerfile
+                    push: true
+                    cache-from: type=gha
+                    cache-to: type=gha,mode=max
+
+#            # Build the Docker image
+#            -   name: Build Docker image
+#                run: |
+#                    REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+#                    docker build -f ./docker/php/Dockerfile -t registry.tom-hart.net/${REPO_NAME}:latest .
+#
+#            # Push the Docker image to the private registry
+#            -   name: Push Docker image
+#                run: |
+#                    REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+#                    docker push registry.tom-hart.net/${REPO_NAME}:latest
