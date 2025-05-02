@@ -35,6 +35,7 @@ jobs:
                     push: true
                     cache-from: type=gha
                     cache-to: type=gha,mode=max
+                    tags: registry.tom-hart.net/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):latest
 
 #            # Build the Docker image
 #            -   name: Build Docker image
