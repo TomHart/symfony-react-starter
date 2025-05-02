@@ -379,9 +379,7 @@ function PasswordCard({user}: { user: User }) {
     }
 
     const {
-        formData,
         errors,
-        isSubmitting,
         handleChange,
         handleSubmit,
         elements
@@ -409,16 +407,6 @@ function PasswordCard({user}: { user: User }) {
                 <CardDescription>Update your password to keep your account secure</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                <div className="space-y-2">
-                    <Label htmlFor="current-password">Current password</Label>
-                    <div className="relative">
-                        <PasswordInput
-                            handleChange={handleChange}
-                            errors={errors}
-                            fieldName="currentPassword"
-                        />
-                    </div>
-                </div>
                 <div className="space-y-2">
                     <Label htmlFor="confirm-password">New password</Label>
                     <PasswordInput

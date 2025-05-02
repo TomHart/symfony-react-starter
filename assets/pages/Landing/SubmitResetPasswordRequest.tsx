@@ -64,10 +64,11 @@ export default function SubmitResetPasswordRequest() {
                     will expire in {lifetime} hour(s).
                 </p>
                 <p className="text-muted-foreground">
-                    If you don't receive an email please check your spam folder or <Link to="/reset-password" onClick={() => {
-                        setSuccess(false);
-                        formData.email = '';
-                }}>try
+                    If you don't receive an email please check your spam folder or <Link to="/reset-password"
+                                                                                         onClick={() => {
+                                                                                             setSuccess(false);
+                                                                                             formData.email = '';
+                                                                                         }}>try
                     again</Link>.
                 </p>
             </div>
@@ -75,20 +76,14 @@ export default function SubmitResetPasswordRequest() {
 
         <div className="text-center text-sm">
             Don't have an account?{" "}
-            <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Register"
-               className="text-primary hover:underline">
-                Register
-            </a>
+            <Link to="/register" className="text-primary hover:underline">Register</Link>
         </div>
         <div className="text-center text-sm">
             Have an account already?{' '}
-            <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Login"
-               className="text-primary hover:underline">
-                Login
-            </a>
+            <Link to="/login" className="text-primary hover:underline">Login</Link>
         </div>
         <div className="flex justify-center">
-            <a href="/public" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+            <a href="/" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="mr-2 h-4 w-4"/>
                 Back to home
             </a>

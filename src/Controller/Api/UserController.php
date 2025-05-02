@@ -81,6 +81,10 @@ class UserController extends AbstractController
             $errors = [];
             foreach ($form->getErrors(true) as $error) {
                 $formField = $error->getOrigin()->getName() ?: 'general';
+                $parent = $error->getOrigin()->getParent()->getName() ?: null;
+                if ($parent) {
+                    $formField = sprintf('%s[%s]', $parent, $formField);
+                }
                 $errors[$formField][] = $error->getMessage();
             }
             return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);

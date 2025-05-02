@@ -5,6 +5,7 @@ import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {useSymfonyForm} from "@/hooks/useSymfonyForm";
+import {Link} from "react-router-dom";
 
 export default function Register() {
 
@@ -90,31 +91,15 @@ export default function Register() {
 
                     <elements.SubmitButton text="Sign Up" submittingText="Submitting..."/>
                 </form>
-                <div className="relative">
-                    <div className="mb-2 inset-0 flex items-center">
-                        <span className="w-full border-t" />
-                    </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-                    </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" className="w-full">
-                        Google
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                        GitHub
-                    </Button>
-                </div>
             </div>
             <div className="text-center text-sm">
                 Have an account already?{' '}
-                <a href="/Users/thr15/Development/Tom/symfony-scaffolding/assets/pages/Unauthenticated/Login" className="text-primary hover:underline">
+                <Link to="/login" className="text-primary hover:underline">
                     Login
-                </a>
+                </Link>
             </div>
             <div className="flex justify-center">
-                <a href="/public" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                <a href="/" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to home
                 </a>
