@@ -27,7 +27,7 @@ jobs:
             # Build the Docker image
             -   name: Build Docker image
                 run: |
-                    docker build -f ./docker.php -t registry.tom-hart.net/symfony-scaffold:latest .
+                    docker build -f ./docker/php -t registry.tom-hart.net/symfony-scaffold:latest .
 
             # Push the Docker image to the private registry
             -   name: Push Docker image
