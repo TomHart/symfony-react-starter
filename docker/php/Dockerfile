@@ -46,7 +46,7 @@ CMD ["php-fpm"]
 
 FROM base AS build
 
-COPY --chown=www-data:www-data components.json composer.json composer.lock package.json postcss.config.js symfony.lock tailwind.config.js tsconfig.json webpack.config.js /var/www/html/
+COPY --chown=www-data:www-data components.json composer.json composer.lock package.json postcss.config.js symfony.lock tailwind.config.js tsconfig.json webpack.config.js .env /var/www/html/
 
 RUN composer install --no-scripts; \
     yarn install;
