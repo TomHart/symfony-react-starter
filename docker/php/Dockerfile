@@ -1,4 +1,4 @@
-FROM php:8.3-fpm as base
+FROM php:8.3-fpm AS base
 
 RUN rm -rf /var/lib/apt/lists/* \
     && apt-get update \
@@ -44,7 +44,7 @@ WORKDIR /var/www/html
 
 CMD ["php-fpm"]
 
-FROM base as build
+FROM base AS build
 
 COPY --chown=www-data:www-data components.json composer.json composer.lock package.json postcss.config.js symfony.lock tailwind.config.js tsconfig.json webpack.config.js /var/www/html/
 
@@ -62,7 +62,7 @@ COPY --chown=www-data:www-data templates/ /var/www/html/templates/
 RUN composer run post-install-cmd; \
     yarn run build;
 
-FROM build as final
+FROM build AS final
 
 USER root
 RUN apt install -y nginx supervisor mycli iputils-ping;
