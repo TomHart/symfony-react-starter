@@ -22,7 +22,10 @@ jobs:
                     username: ${{ secrets.REGISTRY_USERNAME }}
                     password: ${{ secrets.REGISTRY_PASSWORD }}
 
-
+            -   id: lower-repo
+                shell: pwsh
+                run: |
+                    "::set-output name=repository::$($env:GITHUB_REPOSITORY.ToLowerInvariant())"
 
             -   name: Set up Docker Buildx
                 uses: docker/setup-buildx-action@v3
@@ -35,7 +38,7 @@ jobs:
                     push: true
                     cache-from: type=gha
                     cache-to: type=gha,mode=max
-                    tags: registry.tom-hart.net/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):latest
+                    tags: registry.tom-hart.net/${{ steps.lower-repo.outputs.repository }}:latest
 
 #            # Build the Docker image
 #            -   name: Build Docker image
