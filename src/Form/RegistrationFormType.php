@@ -5,9 +5,12 @@ namespace App\Form;
 use App\Entity\User;
 use Override;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -16,7 +19,9 @@ class RegistrationFormType extends AbstractType
     #[Override] public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            ->add('email', EmailType::class, [
+                'label' => 'Email',
+            ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -32,6 +37,10 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+                'label' => 'Password'
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Register'
             ]);
     }
 
@@ -39,6 +48,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+
         ]);
     }
 }

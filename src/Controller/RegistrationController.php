@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionClass;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\String\UnicodeString;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
@@ -96,6 +98,34 @@ class RegistrationController extends AbstractController
         ], 400);
     }
 
+    #[Route('/register/render', name: 'app_register_render')]
+    public function getRegistrationFormConfig(): JsonResponse
+    {
+        $form = $this->createForm(RegistrationFormType::class);
+
+        // Extract fields and constraints from the form
+        $formFields = [];
+
+        foreach ($form->all() as $fieldName => $field) {
+            $fieldConfig = [
+                'name' => $fieldName,
+                'type' => $this->getFieldType($field),
+                'constraints' => $this->getFieldConstraints($field),
+                'label' => $field->getConfig()->getOption('label'),
+            ];
+
+            $formFields[] = $fieldConfig;
+        }
+
+        return new JsonResponse([
+            'formId' => 'registration',
+            'fields' => $formFields,
+            'csrf_namespace' =>
+                $form->getConfig()->getOption('csrf_token_id')
+                ?? (new UnicodeString(substr((new ReflectionClass(RegistrationFormType::class))->getShortName(), 0, -4)))->snake()
+        ]);
+    }
+
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request): Response
     {
@@ -113,5 +143,48 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('app_admin');
+    }
+
+    private function getFieldType($field): string
+    {
+        $type = $field->getConfig()->getType()->getInnerType();
+        return substr(strtolower((new ReflectionClass($type))->getShortName()), 0, -4);
+    }
+
+    private function getFieldConstraints($field): array
+    {
+        $constraints = $field->getConfig()->getOption('constraints');
+
+        if (!$constraints) {
+            return [];
+        }
+
+        $constraintData = [];
+
+        foreach ($constraints as $constraint) {
+            // Reflection to get the constraint properties
+            $reflection = new ReflectionClass($constraint);
+            $properties = $reflection->getProperties();
+
+            $constraintDetails = [
+                'type' => $reflection->getShortName(), // Get the full class name
+                'message' => $constraint->message ?? null, // Default to null if no message is set
+            ];
+
+            // Iterate over the properties and add them to the constraint data
+            foreach ($properties as $property) {
+                $property->setAccessible(true); // Make private/protected properties accessible
+                $value = $property->getValue($constraint);
+
+                // Only add the property if it has a non-null value
+                if ($value !== null) {
+                    $constraintDetails[$property->getName()] = $value;
+                }
+            }
+
+            $constraintData[] = $constraintDetails;
+        }
+
+        return $constraintData;
     }
 }

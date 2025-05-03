@@ -6,11 +6,11 @@ import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {useSymfonyForm} from "@/hooks/useSymfonyForm";
 import {Link} from "react-router-dom";
+import {SymfonyFormWrapper} from "@/components/form/SymfonyForm";
 
 export default function Register() {
 
     const {
-        formData,
         errors,
         handleSubmit,
         handleChange,
@@ -39,6 +39,10 @@ export default function Register() {
                 <p className="text-muted-foreground">Enter your details to sign up</p>
             </div>
             <div className="space-y-6">
+                <SymfonyFormWrapper formName='register' />
+
+                <hr />
+
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
