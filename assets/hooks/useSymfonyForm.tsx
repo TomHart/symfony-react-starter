@@ -57,8 +57,11 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         setErrors({});
 
         const formBody = new URLSearchParams();
+
+        // @ts-ignore
+        formData[csrfFieldName] = csrfToken;
         const entries = Object.entries(formData);
-        entries.push([csrfFieldName as string, csrfToken]);
+        entries.push(['submit', '']);
         for (const [key, value] of entries) {
             if (formKey) {
                 if (key.indexOf('[') === -1) {

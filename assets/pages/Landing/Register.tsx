@@ -17,6 +17,7 @@ export default function Register() {
         elements
     } = useSymfonyForm({
         csrfNamespace: 'registration_form',
+        formKey: 'registration_form',
         submitUrl: '/register',
         initialData: {
             email: '',

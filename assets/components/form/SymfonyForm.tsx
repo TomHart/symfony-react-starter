@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
-import {loadSymfonyForm} from "@/hooks/loadSymfonyForm";
+import {FieldTypes, FormStructure, loadSymfonyForm} from "@/hooks/loadSymfonyForm";
 import {Input} from "@/components/ui/input";
 import {useSymfonyForm} from "@/hooks/useSymfonyForm";
 import PasswordInput from "@/components/form/PasswordInput";
 import EmailInput from "@/components/form/EmailInput";
-import { Label } from '@/components/ui/label';
+import {Label} from '@/components/ui/label';
 
 type SymfonyFormProps = {
     formName: any;
@@ -24,33 +24,12 @@ export function SymfonyFormWrapper({}: SymfonyFormProps) {
     return <SymfonyForm formData={formData}/>;
 }
 
-type FormStructure = {
-    formId: string;
-    fields: {
-        name: string;
-        type: string;
-        constraints: {
-            type: string;
-            message?: string;
-            allowNull?: boolean;
-            groups?: string[];
-            max?: number;
-            min?: number;
-            exactMessage?: string;
-            charsetMessage?: string;
-            maxMessage?: string;
-            minMessage?: string;
-        }[];
-        label: string;
-    }[];
-    csrf_namespace: string;
-}
-
 type InnerFormProps = {
     formData: FormStructure;
+    formKey?: string
 };
 
-export function SymfonyForm({formData}: InnerFormProps) {
+export function SymfonyForm({formData, formKey}: InnerFormProps) {
 
     const {
         errors,
@@ -58,8 +37,9 @@ export function SymfonyForm({formData}: InnerFormProps) {
         handleChange,
         elements
     } = useSymfonyForm({
-        csrfNamespace: 'registration_form',
+        csrfNamespace: formData.csrf_namespace,
         submitUrl: '/register',
+        formKey: formData.csrf_namespace,
         initialData: {}
     });
 
@@ -72,33 +52,40 @@ export function SymfonyForm({formData}: InnerFormProps) {
     return (
         <form className="space-y-4" onSubmit={handleSubmit}>
             {formData.fields.map(field => {
-                const {name, type, label} = field;
+                //const {name, type, label} = field;
 
-                switch (type) {
-                    case 'email':
+                switch (field.type) {
+                    case FieldTypes.email:
                         return (
-                            <EmailInput handleChange={handleChange} errors={{ email: errors.email }}/>
+                            <EmailInput key={field.name} handleChange={handleChange} errors={{email: errors.email}}/>
                         );
-                    case 'password':
+                    case FieldTypes.password:
                         return (
                             <PasswordInput
-                                fieldName={name}
+                                key={field.name}
+                                fieldName={field.name}
                                 handleChange={handleChange}
                                 showForgotPassword={false}
                                 errors={errors}
                             />
                         );
-                    case 'submit':
-                        return <elements.SubmitButton text={label} submittingText="Submitting..."/>
+                    case FieldTypes.submit:
+                        return (
+                            <elements.SubmitButton
+                                key={field.name}
+                                text={field.label}
+                                submittingText={field.submittingText}
+                            />
+                        );
                     default:
                         return (
-                            <div className="space-y-2">
-                                <Label htmlFor={name}>{label}</Label>
+                            <div className="space-y-2" key={field.name}>
+                                <Label htmlFor={field.name}>{field.label}</Label>
                                 <Input
-                                    id={name}
+                                    id={field.name}
                                     type="hidden"
-                                    name={name}
-                                    placeholder={label}
+                                    name={field.name}
+                                    placeholder={field.label}
                                     required
                                     onChange={handleChange}
                                 />

@@ -3,14 +3,13 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Form\InputType\SubmitType;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -40,7 +39,8 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Password'
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Register'
+                'label' => 'Register',
+                'submittingText' => 'Registering...',
             ]);
     }
 
