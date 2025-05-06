@@ -12,7 +12,7 @@ export default function Register() {
                 <p className="text-muted-foreground">Enter your details to sign up</p>
             </div>
             <div className="space-y-6">
-                <SymfonyFormWrapper formUrl='/register/render' submitUrl='/register' onSuccess={() => alert('Success!')}/>
+                <SymfonyFormWrapper formUrl='/register/render' submitUrl='/register' onSuccess={() => window.location.href = '/admin'}/>
             </div>
             <div className="text-center text-sm">
                 Have an account already?{' '}
