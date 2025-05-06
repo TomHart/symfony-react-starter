@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {Input} from "@/components/ui/input";
 import {FieldTypes, FormStructure, useLoadSymfonyForm, useRenderSymfonyForm} from "@/hooks/symfonyFormHooks";
 import PasswordInput from "@/components/form/PasswordInput";
@@ -14,7 +14,20 @@ type SymfonyFormProps = {
 export function SymfonyFormWrapper({formUrl, onSuccess, submitUrl}: SymfonyFormProps) {
     const {loading, formData} = useLoadSymfonyForm({formUrl});
 
-    if (loading) return <div>Loading form...</div>;
+    if (loading) return <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className='m-auto animate-spin'
+    >
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>;
     if (!formData) return <div>Failed to load form.</div>;
 
     return <SymfonyForm formData={formData} submitUrl={submitUrl} onSuccess={onSuccess}/>;
