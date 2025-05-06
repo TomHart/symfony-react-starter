@@ -93,7 +93,7 @@ export function useLoadSymfonyForm({formUrl}: { formUrl: string }) {
         }
 
         void fetchForm();
-    }, []);
+    }, [formUrl]);
 
     return {loading, formData};
 }
@@ -146,9 +146,11 @@ export function useRenderSymfonyForm<T extends { [key: string]: any }>(
 
         const formBody = new URLSearchParams();
 
-        // @ts-ignore
-        formData[csrfFieldName] = csrfToken;
-        const entries = Object.entries(formData);
+        const formDataWithToken = {
+            ...formData,
+            [csrfFieldName as string]: csrfToken
+        };
+        const entries = Object.entries(formDataWithToken);
         entries.push(['submit', '']);
         for (const [key, value] of entries) {
             if (formKey) {

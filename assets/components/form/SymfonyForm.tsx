@@ -26,7 +26,7 @@ export function SymfonyFormWrapper({formUrl, onSuccess, submitUrl}: SymfonyFormP
         strokeLinejoin="round"
         className='m-auto animate-spin'
     >
-        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
     </svg>;
     if (!formData) return <div>Failed to load form.</div>;
 
@@ -61,7 +61,10 @@ function SymfonyForm({formData, submitUrl, onSuccess}: InnerFormProps) {
                 switch (field.type) {
                     case FieldTypes.email:
                         return (
-                            <EmailInput key={field.name} handleChange={handleChange} errors={{email: errors.email}}/>
+                            <EmailInput
+                                key={field.name}
+                                handleChange={handleChange}
+                                errors={{[field.name]: errors[field.name]}}/>
                         );
                     case FieldTypes.password:
                         return (
@@ -98,7 +101,7 @@ function SymfonyForm({formData, submitUrl, onSuccess}: InnerFormProps) {
                 }
             })}
 
-            {errors.registration_form?.map((msg, i) => (
+            {errors[formData.formId]?.map((msg, i) => (
                 <div key={i} className="text-red-500 text-sm">{msg}</div>
             ))}
 

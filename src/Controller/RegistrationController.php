@@ -107,16 +107,13 @@ class RegistrationController extends AbstractController
         $formFields = [];
 
         foreach ($form->all() as $fieldName => $field) {
-            $options = $field->getConfig()->getOptions();
-            ksort($options);
-            $fieldConfig = array_merge(
-                [
-                    'name' => $fieldName,
-                    'type' => $this->getFieldType($field),
-                    'constraints' => $this->getFieldConstraints($field),
-                ],
-                $options
-            );
+            $fieldConfig = array_filter([
+                'name' => $fieldName,
+                'type' => $this->getFieldType($field),
+                'constraints' => $this->getFieldConstraints($field),
+                'label' => $field->getConfig()->getOption('label'),
+                'submittingText' => $field->getConfig()->getOption('submittingText'),
+            ]);
 
             $formFields[] = $fieldConfig;
         }
@@ -128,7 +125,7 @@ class RegistrationController extends AbstractController
                 $form->getConfig()->getOption('csrf_token_id')
                 ?? (new UnicodeString(
                     substr((new ReflectionClass(RegistrationFormType::class))->getShortName(), 0, -4)
-                ))->snake()
+                ))->snake()->toString()
         ]);
     }
 
@@ -149,60 +146,6 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('app_admin');
-    }
-
-    #[Route('/register2', name: 'app_register2')]
-    public function register2(
-        Request $request,
-        UserPasswordHasherInterface $passwordHasher, // Updated to UserPasswordHasherInterface
-        EntityManagerInterface $entityManager, // Injected directly
-        AuthenticationUtils $authenticationUtils, // For login functionality
-        TokenStorageInterface $tokenStorage
-    ): Response {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $passwordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $user,
-                (new TemplatedEmail())
-                    ->from(
-                        new Address(
-                            $this->getParameter('notification_email'),
-                            $this->getParameter('notification_email_name')
-                        )
-                    )
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('email/registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
-
-            // Automatically log the user in by generating a valid session after registration
-            $tokenStorage->setToken(
-                new UsernamePasswordToken($user, 'main', $user->getRoles()),
-            );
-
-            return new JsonResponse(['success' => true]);
-        }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
     }
 
     private function getFieldType($field): string
