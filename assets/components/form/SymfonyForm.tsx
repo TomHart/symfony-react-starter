@@ -7,26 +7,26 @@ import {Label} from '@/components/ui/label';
 
 type SymfonyFormProps = {
     formUrl: string;
+    submitUrl: string;
     onSuccess?: (response: any) => void;
-
 }
 
-export function SymfonyFormWrapper({formUrl, onSuccess}: SymfonyFormProps) {
+export function SymfonyFormWrapper({formUrl, onSuccess, submitUrl}: SymfonyFormProps) {
     const {loading, formData} = useLoadSymfonyForm({formUrl});
 
     if (loading) return <div>Loading form...</div>;
     if (!formData) return <div>Failed to load form.</div>;
 
-    return <SymfonyForm formData={formData} onSuccess={onSuccess}/>;
+    return <SymfonyForm formData={formData} submitUrl={submitUrl} onSuccess={onSuccess}/>;
 }
 
 type InnerFormProps = {
     formData: FormStructure;
-    formKey?: string;
     onSuccess?: (response: any) => void;
+    submitUrl: string;
 };
 
-export function SymfonyForm({formData, formKey, onSuccess}: InnerFormProps) {
+function SymfonyForm({formData, submitUrl, onSuccess}: InnerFormProps) {
 
     const {
         errors,
@@ -35,22 +35,15 @@ export function SymfonyForm({formData, formKey, onSuccess}: InnerFormProps) {
         elements
     } = useRenderSymfonyForm({
         csrfNamespace: formData.csrf_namespace,
-        submitUrl: '/register',
+        submitUrl: submitUrl,
         formKey: formData.csrf_namespace,
         initialData: {},
         onSuccess: onSuccess
     });
 
-    const [showPassword, setShowPassword] = useState(false);
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
-
     return (
         <form className="space-y-4" onSubmit={handleSubmit}>
             {formData.fields.map(field => {
-                //const {name, type, label} = field;
 
                 switch (field.type) {
                     case FieldTypes.email:
