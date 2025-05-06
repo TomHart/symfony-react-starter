@@ -1,36 +1,38 @@
-import React, {useState} from 'react';
-import {ArrowLeft, Eye, EyeOff} from 'lucide-react';
-
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
-import {useSymfonyForm} from "@/hooks/useSymfonyForm";
+import React from 'react';
+import {ArrowLeft} from 'lucide-react';
 import {Link} from "react-router-dom";
+import {SymfonyFormWrapper} from "@/components/form/SymfonyForm";
+import {useUser} from "@/provider/UserContext";
 
 export default function Register() {
+    const {user, loading} = useUser();
 
-    const {
-        formData,
-        errors,
-        handleSubmit,
-        handleChange,
-        elements
-    } = useSymfonyForm({
-        csrfNamespace: 'registration_form',
-        submitUrl: '/register',
-        initialData: {
-            email: '',
-            plainPassword: '',
-            _token: ''
-        }
-    });
+    if (loading) {
+        return <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className='m-auto animate-spin'
+        >
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+        </svg>;
+    }
 
-    const [showPassword, setShowPassword] = useState(false);
+    if (user) {
+        window.location.href = '/admin';
+        return <p>Already logged in, redirecting...</p>;
+    }
 
+    return <RegisterInner/>;
+}
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
+function RegisterInner() {
 
     return (
         <div className="m-auto w-full max-w-md space-y-8">
@@ -39,58 +41,8 @@ export default function Register() {
                 <p className="text-muted-foreground">Enter your details to sign up</p>
             </div>
             <div className="space-y-6">
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            name="email"
-                            placeholder="name@example.com"
-                            required
-                            onChange={handleChange}
-                            className={errors.email ? 'border-red-500' : ''}
-                        />
-                        {errors.email?.map((msg, i) => (
-                            <div key={i} className="text-red-500 text-sm">{msg}</div>
-                        ))}
-                    </div>
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="password">Password</Label>
-                        </div>
-                        <div className="relative">
-                            <Input
-                                id="password"
-                                name="plainPassword"
-                                type={showPassword ? 'text' : 'password'}
-                                placeholder="••••••••"
-                                required
-                                onChange={handleChange}
-                                className={errors.plainPassword ? 'border-red-500' : ''}
-                            />
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="absolute right-2 top-1/2 -translate-y-1/2"
-                                onClick={togglePasswordVisibility}
-                            >
-                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                <span className="sr-only">Toggle password visibility</span>
-                            </Button>
-                        </div>
-                        {errors.plainPassword?.map((msg, i) => (
-                            <div key={i} className="text-red-500 text-sm">{msg}</div>
-                        ))}
-                    </div>
-
-                    {errors.registration_form?.map((msg, i) => (
-                        <div key={i} className="text-red-500 text-sm">{msg}</div>
-                    ))}
-
-                    <elements.SubmitButton text="Sign Up" submittingText="Submitting..."/>
-                </form>
+                <SymfonyFormWrapper formUrl='/register/render' submitUrl='/register'
+                                    onSuccess={() => window.location.href = '/admin'}/>
             </div>
             <div className="text-center text-sm">
                 Have an account already?{' '}
@@ -100,7 +52,7 @@ export default function Register() {
             </div>
             <div className="flex justify-center">
                 <a href="/" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <ArrowLeft className="mr-2 h-4 w-4"/>
                     Back to home
                 </a>
             </div>

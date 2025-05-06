@@ -18,7 +18,95 @@ type ErrorsType<T> = {
     [formKey: string]: string[] | undefined;
 }
 
-export function useSymfonyForm<T extends { [key: string]: any }>(
+
+export enum FieldTypes {
+    email = 'email',
+    password = 'password',
+    submit = 'submit',
+    input = 'input'
+}
+
+type Constraints = {
+    type: string;
+    message?: string;
+    allowNull?: boolean;
+    groups?: string[];
+    max?: number;
+    min?: number;
+    exactMessage?: string;
+    charsetMessage?: string;
+    maxMessage?: string;
+    minMessage?: string;
+};
+
+type BaseField = {
+    name: string;
+    label: string;
+    constraints: Constraints[];
+};
+
+type SubmitField = BaseField & {
+    type: FieldTypes.submit;
+    submittingText: string;
+};
+
+type OtherField = BaseField & {
+    type: Exclude<FieldTypes, FieldTypes.submit>;
+};
+
+type Field = SubmitField | OtherField;
+
+export type FormStructure = {
+    formId: string;
+    fields: Field[];
+    csrf_namespace: string;
+};
+
+export function useLoadSymfonyForm({formUrl}: { formUrl: string }) {
+    const [loading, setLoading] = React.useState(true);
+    const [formData, setFormData] = React.useState<FormStructure>();
+
+    React.useEffect(() => {
+        async function fetchForm() {
+            try {
+                const response = await fetch(formUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setFormData({
+                        ...data,
+                        fields: data.fields.map(parseField),
+                    });
+                } else {
+                    console.error('Failed to fetch form:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching form:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        void fetchForm();
+    }, [formUrl]);
+
+    return {loading, formData};
+}
+
+function parseField(raw: any): Field {
+    if (raw.type === FieldTypes.submit) {
+        return {...raw, type: FieldTypes.submit,} as SubmitField;
+    }
+
+    return {...raw, type: raw.type as Exclude<FieldTypes, FieldTypes.submit>,} as OtherField;
+}
+
+export function useRenderSymfonyForm<T extends { [key: string]: any }>(
     {
         csrfNamespace = 'authenticate',
         submitUrl,
@@ -57,8 +145,13 @@ export function useSymfonyForm<T extends { [key: string]: any }>(
         setErrors({});
 
         const formBody = new URLSearchParams();
-        const entries = Object.entries(formData);
-        entries.push([csrfFieldName as string, csrfToken]);
+
+        const formDataWithToken = {
+            ...formData,
+            [csrfFieldName as string]: csrfToken
+        };
+        const entries = Object.entries(formDataWithToken);
+        entries.push(['submit', '']);
         for (const [key, value] of entries) {
             if (formKey) {
                 if (key.indexOf('[') === -1) {

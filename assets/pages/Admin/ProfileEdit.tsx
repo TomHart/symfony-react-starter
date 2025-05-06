@@ -3,7 +3,7 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {Label} from "@/components/ui/label"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {User, useUser} from "@/provider/UserContext";
-import {useSymfonyForm} from "@/hooks/useSymfonyForm";
+import {useRenderSymfonyForm} from "@/hooks/symfonyFormHooks";
 import EmailInput from "@/components/form/EmailInput";
 import Loading from "@/pages/Landing/Loading";
 import PasswordInput from "@/components/form/PasswordInput";
@@ -285,7 +285,7 @@ function PersonalInformationCard({user}: { user: User }) {
         handleChange,
         handleSubmit,
         elements
-    } = useSymfonyForm({
+    } = useRenderSymfonyForm({
         csrfNamespace: 'update_email',
         submitUrl: `/api/user/${user?.id}/email`,
         csrfFieldName: '_token',
@@ -383,7 +383,7 @@ function PasswordCard({user}: { user: User }) {
         handleChange,
         handleSubmit,
         elements
-    } = useSymfonyForm({
+    } = useRenderSymfonyForm({
         csrfNamespace: 'update_password',
         submitUrl: `/api/user/${user?.id}/password`,
         csrfFieldName: '_token',
