@@ -1,6 +1,6 @@
 import React from 'react'
 import {ArrowLeft} from "lucide-react"
-import {useSymfonyForm} from "@/hooks/useSymfonyForm";
+import {useRenderSymfonyForm} from "@/hooks/symfonyFormHooks";
 import EmailInput from "@/components/form/EmailInput";
 import PasswordInput from "@/components/form/PasswordInput";
 import {Link} from "react-router-dom";
@@ -12,7 +12,7 @@ export default function Login() {
         handleChange,
         handleSubmit,
         elements
-    } = useSymfonyForm({
+    } = useRenderSymfonyForm({
         submitUrl: '/login',
         csrfFieldName: '_csrf_token',
         initialData: {

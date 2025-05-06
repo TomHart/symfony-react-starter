@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {useSymfonyForm} from "@/hooks/useSymfonyForm";
+import {useRenderSymfonyForm} from "@/hooks/symfonyFormHooks";
 import {Label} from "@/components/ui/label";
 import PasswordInput from "@/components/form/PasswordInput";
 import {useNavigate} from 'react-router-dom';
@@ -13,7 +13,7 @@ export default function SubmitResetPasswordRequest() {
         handleChange,
         handleSubmit,
         elements
-    } = useSymfonyForm({
+    } = useRenderSymfonyForm({
         submitUrl: '/reset-password/reset',
         csrfFieldName: '_token',
         csrfNamespace: 'change_password',

@@ -1,7 +1,7 @@
 import React from 'react'
 import {ArrowLeft} from "lucide-react"
 
-import {useSymfonyForm} from "@/hooks/useSymfonyForm";
+import {useRenderSymfonyForm} from "@/hooks/symfonyFormHooks";
 import EmailInput from "@/components/form/EmailInput";
 import {Link} from "react-router-dom";
 
@@ -16,7 +16,7 @@ export default function SubmitResetPasswordRequest() {
         handleChange,
         handleSubmit,
         elements
-    } = useSymfonyForm({
+    } = useRenderSymfonyForm({
         submitUrl: '/reset-password',
         csrfFieldName: '_token',
         csrfNamespace: 'reset_password',
